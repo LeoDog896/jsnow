@@ -1,14 +1,18 @@
 <script lang="ts">
 	import Tailwindcss from "./Tailwindcss.svelte"
 	import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-	import { javascript } from "@codemirror/lang-javascript"
+	import { linter as linterExtension } from "@codemirror/lint"
+	import { javascript, esLint } from "@codemirror/lang-javascript"
 	import { onMount } from "svelte"
 	import { ViewPlugin } from "@codemirror/view"
+	import { Linter } from "eslint4b"
+	import { transformAsync } from "@babel/core"
 
 	let value: string = ""
+	const linter = new Linter()
 
 	const updatePlugin = ViewPlugin.fromClass(class {
-		constructor(view) {}
+		constructor() {}
 
 		update(update) {
 			if (update.docChanged) value = update.state.doc.toString()
@@ -23,9 +27,10 @@
 			state: EditorState.create({
 				extensions: [
 					basicSetup,
-					javascript(),
+					javascript({ jsx: false, typescript: true }),
 					updatePlugin,
 					EditorView.lineWrapping,
+					linterExtension(esLint(linter))
 				],
 			}),
 			parent: editor
@@ -68,8 +73,10 @@
 </script>
 <div class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div bind:this={editor}></div>
-	{#await run(value) then result}
-		<p>{result}</p>
+	{#await transformAsync(value) then transformedCode}
+		{#await run(transformedCode) then result}
+			<p>{result}</p>
+		{/await}
 	{/await}
 </div>
 <Tailwindcss />
