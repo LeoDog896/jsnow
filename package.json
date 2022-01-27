@@ -9,11 +9,14 @@
 		"check": "svelte-check --tsconfig ./tsconfig.json"
 	},
 	"devDependencies": {
+		"@codemirror/basic-setup": "^0.19.1",
+		"@codemirror/lang-javascript": "^0.19.6",
 		"@rollup/plugin-commonjs": "^21.0.0",
 		"@rollup/plugin-node-resolve": "^13.0.0",
 		"@rollup/plugin-typescript": "^8.3.0",
 		"@tsconfig/svelte": "^2.0.1",
 		"autoprefixer": "^10.4.0",
+		"codemirror": "^5.65.1",
 		"postcss": "^8.4.4",
 		"postcss-load-config": "^3.1.0",
 		"rollup": "^2.60.2",
