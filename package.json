@@ -16,6 +16,7 @@
 		"@rollup/plugin-node-resolve": "^13.0.0",
 		"@rollup/plugin-typescript": "^8.3.0",
 		"@tsconfig/svelte": "^2.0.1",
+		"@types/babel__core": "^7.1.18",
 		"autoprefixer": "^10.4.0",
 		"codemirror": "^5.65.1",
 		"eslint4b": "^7.32.0",
