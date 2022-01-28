@@ -1,6 +1,11 @@
-# duckshow
-ducks and other random animals.
+# jsnow
 
-built with <3 using svelte.
+A simple runner of JS that executes JS as you type
 
-can be found at https://leodog896.github.io/duckshow/
+## How?
+
+### Babel
+
+Babel is used to compile both TypeScript and new ES Features, as well as adding implicit checkpoints.
+
+This allows for line-by-line comparison.

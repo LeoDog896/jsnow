@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Tailwindcss from "./Tailwindcss.svelte"
 	import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-	import { linter as linterExtension } from "@codemirror/lint"
-	import { javascript, esLint } from "@codemirror/lang-javascript"
+	import { javascript } from "@codemirror/lang-javascript"
 	import { onMount } from "svelte"
-	import { ViewPlugin } from "@codemirror/view"
+	import { ViewPlugin, keymap } from "@codemirror/view"
+	import { indentWithTab } from "@codemirror/commands"
 
 	let value: string = ""
 
@@ -27,6 +27,7 @@
 					javascript({ jsx: false, typescript: true }),
 					updatePlugin,
 					EditorView.lineWrapping,
+					keymap.of([indentWithTab])
 				],
 			}),
 			parent: editor
@@ -34,14 +35,20 @@
 	})
 
 
-	const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+	const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
 
-	async function run(string: string): Promise<string> {
+	interface Result {
+		lineNumber: number,
+		content?: any
+	}
 
-		if (string == "") return ""
+	async function run(string: string): Promise<Result[] | Error | null> {
+
+		if (string == "") return null
 		try {
 
-			const babelled = Babel.transform(string, { 
+			let unparsedResults: Result[] = []
+			const babelled = window["Babel"].transform(string, { 
 				filename: "index.ts",
 				presets: ["env", "typescript"],
 				parserOpts: {
@@ -49,29 +56,47 @@
 				}
 			}).code
 
-			const asyncFunction = AsyncFunction(babelled)
+			const asyncFunction = AsyncFunction("debug", babelled)
 			
-			const element = await asyncFunction({
-				log: (element) => alert(element)
+			await asyncFunction((lineNumber: number, content?: any) => {
+				unparsedResults = [...unparsedResults, { lineNumber, content }]
 			})
 
-			if (Array.isArray(element)) {
-				return `Array(${element.length}) [${element.join(", ")}]`
-			}
+			if (unparsedResults.length == 0) return []
 
-			if (typeof element == "object") {
-				return JSON.stringify(element)
-			}
+			const results: Result[] = unparsedResults.map(result => {
+				const content = (() => {
 
-			if (typeof element == "string") {
-				return `"${element}"`
-			}
+					const content = result.content
 
-			if (typeof element == "bigint") {
-				return `${element}n`
-			}
+					if (!content) return ""
 
-			return element;
+					if (Array.isArray(content)) {
+						return `Array(${content.length}) [${content.join(", ")}]`
+					}
+
+					if (typeof content == "object") {
+						return JSON.stringify(content)
+					}
+
+					if (typeof content == "string") {
+						return `"${content}"`
+					}
+
+					if (typeof content == "bigint") {
+						return `${content}n`
+					}
+
+					return content
+				})()
+
+				return {
+					lineNumber: result.lineNumber,
+					content
+				}
+			}).sort((a, b) => a.lineNumber - b.lineNumber)
+
+			return results;
 		} catch(e) {
 			return e
 		}
@@ -79,14 +104,33 @@
 </script>
 <div class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div bind:this={editor}></div>
-	{#await run(value) then result}
-		<p>{result}</p>
+	{#await run(value) then results}
+		<p class="px-1 text-base">
+			{#if results instanceof Error}
+				{#each results.toString().split("\n") as resultLine}
+					<p>{resultLine}</p>
+				{/each}
+			{:else}
+				{#each results as result, i}
+					{@const lastLineNumber = i == 0 ? 0 : results[i - 1].lineNumber}
+					{#each Array((result.lineNumber - lastLineNumber) - 1) as _}
+						<br/>
+					{/each}
+					<p>{result.content}</p>
+				{/each}
+			{/if}
+		</p>
 	{/await}
 </div>
 <Tailwindcss />
 <style>
 	:global(.cm-scroller) { 
 		overflow: scroll-y;
-		min-height: 100vh; 
+		min-height: 100vh;
+		max-height: 100vh; 
+	}
+
+	:global(.cm-content) {
+		font-size: 16px;
 	}
 </style>
