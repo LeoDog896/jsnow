@@ -5,11 +5,8 @@
 	import { javascript, esLint } from "@codemirror/lang-javascript"
 	import { onMount } from "svelte"
 	import { ViewPlugin } from "@codemirror/view"
-	import { Linter } from "eslint4b"
-	import { transformAsync } from "@babel/core"
 
 	let value: string = ""
-	const linter = new Linter()
 
 	const updatePlugin = ViewPlugin.fromClass(class {
 		constructor() {}
@@ -30,7 +27,6 @@
 					javascript({ jsx: false, typescript: true }),
 					updatePlugin,
 					EditorView.lineWrapping,
-					linterExtension(esLint(linter))
 				],
 			}),
 			parent: editor
@@ -41,9 +37,19 @@
 	const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 
 	async function run(string: string): Promise<string> {
+
 		if (string == "") return ""
 		try {
-			const asyncFunction = AsyncFunction(string)
+
+			const babelled = Babel.transform(string, { 
+				filename: "index.ts",
+				presets: ["env", "typescript"],
+				parserOpts: {
+					allowReturnOutsideFunction: true
+				}
+			}).code
+
+			const asyncFunction = AsyncFunction(babelled)
 			
 			const element = await asyncFunction({
 				log: (element) => alert(element)
@@ -73,10 +79,8 @@
 </script>
 <div class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div bind:this={editor}></div>
-	{#await transformAsync(value) then transformedCode}
-		{#await run(transformedCode) then result}
-			<p>{result}</p>
-		{/await}
+	{#await run(value) then result}
+		<p>{result}</p>
 	{/await}
 </div>
 <Tailwindcss />
