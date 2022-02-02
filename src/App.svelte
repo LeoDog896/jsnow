@@ -5,6 +5,7 @@
 	import { onMount } from "svelte"
 	import { ViewPlugin, keymap } from "@codemirror/view"
 	import { indentWithTab } from "@codemirror/commands"
+	import logPlugin from "./log-babel"
 
 	let value: string = ""
 
@@ -42,6 +43,8 @@
 		content?: any
 	}
 
+	window["Babel"].registerPlugin("log-transform", logPlugin)
+
 	async function run(string: string): Promise<Result[] | Error | null> {
 
 		if (string == "") return null
@@ -53,7 +56,8 @@
 				presets: ["env", "typescript"],
 				parserOpts: {
 					allowReturnOutsideFunction: true
-				}
+				},
+				plugins: ["log-transform"]
 			}).code
 
 			const asyncFunction = AsyncFunction("debug", babelled)
@@ -68,8 +72,6 @@
 				const content = (() => {
 
 					const content = result.content
-
-					if (!content) return ""
 
 					if (Array.isArray(content)) {
 						return `Array(${content.length}) [${content.join(", ")}]`
