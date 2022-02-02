@@ -6,6 +6,7 @@
 	import { ViewPlugin, keymap } from "@codemirror/view"
 	import { indentWithTab } from "@codemirror/commands"
 	import logPlugin from "./log-babel"
+	import strayExpression from "./stray-expression-babel"
 
 	let value: string = ""
 
@@ -44,6 +45,7 @@
 	}
 
 	window["Babel"].registerPlugin("log-transform", logPlugin)
+	window["Babel"].registerPlugin("stray-expression-babel", strayExpression)
 
 	async function run(string: string): Promise<Result[] | Error | null> {
 
@@ -57,7 +59,7 @@
 				parserOpts: {
 					allowReturnOutsideFunction: true
 				},
-				plugins: ["log-transform"]
+				plugins: ["log-transform", "stray-expression-babel"]
 			}).code
 
 			const asyncFunction = AsyncFunction("debug", babelled)
