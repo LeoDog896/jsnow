@@ -109,7 +109,7 @@
 <div class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div bind:this={editor}></div>
 	{#await run(value) then results}
-		<p class="px-1 text-base">
+		<p class="px-1 text-[1rem] leading-[1.4058rem]">
 			{#if results instanceof Error}
 				{#each results.toString().split("\n") as resultLine}
 					<p>{resultLine}</p>
