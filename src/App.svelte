@@ -8,6 +8,10 @@
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
 
+	if ('serviceWorker' in navigator) {
+    	navigator.serviceWorker.register('/service-worker.js');
+    }
+
 	let value: string = ""
 
 	const updatePlugin = ViewPlugin.fromClass(class {
@@ -76,7 +80,7 @@
 					const content = result.content
 
 					if (Array.isArray(content)) {
-						return `Array(${content.length}) [${content.join(", ")}]`
+						return `[${content.join(", ")}]`
 					}
 
 					if (typeof content == "object") {
