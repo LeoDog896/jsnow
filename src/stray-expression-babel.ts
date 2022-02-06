@@ -8,6 +8,8 @@ export default function({ types: t }) {
 		if (path.parentPath.node.type == "ArrowFunctionExpression") return;
 		if (path.parentPath.node.type == "ReturnStatement") return;
 		if (path.parentPath.node.type == "CallExpression") return
+		if (path.parentPath.node.type == "AwaitExpression") return
+      	if (path.parentPath.node.type == "VariableDeclarator") return
 		if (path.node.loc == null) return
 
 		path.replaceWith(
@@ -25,7 +27,13 @@ export default function({ types: t }) {
 			},
 			CallExpression(path) {
 				expression(path)
-			}
+			},
+          	AwaitExpression(path) {
+             	expression(path) 
+            },
+          	NewExpression(path) {
+            	expression(path) 
+            }
 		}
 	}
 }

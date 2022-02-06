@@ -21,6 +21,10 @@
 			if (update.docChanged) value = update.state.doc.toString()
 		}
 	})
+	
+	const isPromise = promiseToCheck => {
+  		return promiseToCheck && Object.prototype.toString.call(promiseToCheck) === "[object Promise]";
+	}
 
 
 	let editor: HTMLDivElement
@@ -81,6 +85,10 @@
 
 					if (Array.isArray(content)) {
 						return `[${content.join(", ")}]`
+					}
+
+					if (isPromise(content)) {
+						return "Promise"
 					}
 
 					if (typeof content == "object") {
