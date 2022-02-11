@@ -8,6 +8,110 @@
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
 
+	enum Colors {
+		TRUE = "#42f598",
+		FALSE = "#f55442",
+		NUMBER = "#368aa3",
+		GRAY = "#807b7a"
+	}
+
+	function flattenColoredElement(element: ColoredElement): ColoredElement[] {
+
+		if (typeof element.content == "string") return [{
+			content: element.content,
+			color: element.color
+		}]
+
+		return element.content.flat()
+	}
+
+	interface ColoredElement {
+		content: string | ColoredElement[],
+		color?: Colors
+	}
+
+	function stringify(element: any): ColoredElement {
+		if (Array.isArray(element)) {
+
+			return {
+				content: [
+					{
+						content: "[",
+						color: Colors.GRAY
+					},
+					...element.map((it, index) => {
+
+						if (index + 1 == element.length) return stringify(it)
+
+						return [stringify(it), {
+							content: ", ",
+							color: Colors.GRAY
+						}]
+					}).flat(),
+					{
+						content: "]",
+						color: Colors.GRAY
+					}
+				]
+			}
+		}
+
+		if (isPromise(element)) {
+			return {
+				content: "Promise",
+				color: Colors.GRAY
+			}
+		}
+
+		if (element === true) {
+			return {
+				content: "true",
+				color: Colors.TRUE
+			}
+		}
+
+		if (element === false) {
+			return {
+				content: "false",
+				color: Colors.FALSE
+			}
+		}
+
+
+		if (typeof element == "number") {
+			return {
+				content: element.toString(),
+				color: Colors.NUMBER
+			}
+		}
+
+		if (typeof element == "object") {
+			return {
+				content: JSON.stringify(element),
+				color: Colors.GRAY
+			}
+		}
+
+		if (typeof element == "string") {
+			return {
+				content: `"${element}"`,
+				color: Colors.GRAY
+			}
+		}
+
+		if (typeof element == "bigint") {
+			return {
+				content: `${element}n`,
+				color: Colors.NUMBER
+			}
+		}
+
+		return {
+			content: element.toString(),
+			color: Colors.GRAY
+		}
+	}
+
 	if ('serviceWorker' in navigator) {
     	navigator.serviceWorker.register('/service-worker.js');
     }
@@ -49,7 +153,7 @@
 
 	interface Result {
 		lineNumber: number,
-		content?: any
+		content?: ColoredElement
 	}
 
 	window["Babel"].registerPlugin("log-transform", logPlugin)
@@ -79,36 +183,10 @@
 			if (unparsedResults.length == 0) return []
 
 			const results: Result[] = unparsedResults.map(result => {
-				const content = (() => {
-
-					const content = result.content
-
-					if (Array.isArray(content)) {
-						return `[${content.join(", ")}]`
-					}
-
-					if (isPromise(content)) {
-						return "Promise"
-					}
-
-					if (typeof content == "object") {
-						return JSON.stringify(content)
-					}
-
-					if (typeof content == "string") {
-						return `"${content}"`
-					}
-
-					if (typeof content == "bigint") {
-						return `${content}n`
-					}
-
-					return content
-				})()
 
 				return {
 					lineNumber: result.lineNumber,
-					content
+					content: stringify(result.content)
 				}
 			}).sort((a, b) => a.lineNumber - b.lineNumber)
 
@@ -132,7 +210,11 @@
 					{#each Array((result.lineNumber - lastLineNumber) - 1) as _}
 						<br/>
 					{/each}
-					<p>{result.content}</p>
+					<p>
+						{#each flattenColoredElement(result.content) as line}
+							<span style="color: {line.color};">{line.content}</span>
+						{/each}
+					</p>
 				{/each}
 			{/if}
 		</p>
