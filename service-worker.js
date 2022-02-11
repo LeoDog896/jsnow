@@ -1,9 +1,6 @@
 let cacheName = "sgtoilet-cache-" + Date.now();
 let filesToCache = [
-	"/",
-	"/index.html",
-	"/build/bundle.css",
-	"/build/bundle.js",
+	
 ];
 self.addEventListener("install", function(e) {
   e.waitUntil(
