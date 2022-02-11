@@ -9,9 +9,10 @@
 	import strayExpression from "./stray-expression-babel"
 
 	enum Colors {
-		TRUE = "#42f598",
+		TRUE = "#1f924a",
 		FALSE = "#f55442",
 		NUMBER = "#368aa3",
+		STRING = "#9c8e1f",
 		GRAY = "#807b7a"
 	}
 
@@ -95,7 +96,7 @@
 		if (typeof element == "string") {
 			return {
 				content: `"${element}"`,
-				color: Colors.GRAY
+				color: Colors.STRING
 			}
 		}
 
@@ -198,27 +199,29 @@
 </script>
 <div class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div bind:this={editor}></div>
-	{#await run(value) then results}
-		<p class="px-1 text-[1rem] leading-[1.4058rem]">
-			{#if results instanceof Error}
-				{#each results.toString().split("\n") as resultLine}
-					<p>{resultLine}</p>
-				{/each}
-			{:else}
-				{#each results as result, i}
-					{@const lastLineNumber = i == 0 ? 0 : results[i - 1].lineNumber}
-					{#each Array((result.lineNumber - lastLineNumber) - 1) as _}
-						<br/>
+	{#if value}
+		{#await run(value) then results}
+			<p class="px-1 text-[1rem] leading-[1.4058rem]">
+				{#if results instanceof Error}
+					{#each results.toString().split("\n") as resultLine}
+						<p>{resultLine}</p>
 					{/each}
-					<p>
-						{#each flattenColoredElement(result.content) as line}
-							<span style="color: {line.color};">{line.content}</span>
+				{:else}
+					{#each results as result, i}
+						{@const lastLineNumber = i == 0 ? 0 : results[i - 1].lineNumber}
+						{#each Array((result.lineNumber - lastLineNumber) - 1) as _}
+							<br/>
 						{/each}
-					</p>
-				{/each}
-			{/if}
-		</p>
-	{/await}
+						<p>
+							{#each flattenColoredElement(result.content) as line}
+								<span style="color: {line.color};">{line.content}</span>
+							{/each}
+						</p>
+					{/each}
+				{/if}
+			</p>
+		{/await}
+	{/if}
 </div>
 <Tailwindcss />
 <style>
