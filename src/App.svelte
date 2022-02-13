@@ -102,10 +102,40 @@
 			}
 		}
 
+		if (typeof element == "symbol") {
+			return {
+				content: [
+					{
+						content: "Symbol(",
+						color: Colors.GRAY
+					},
+					stringify(element.description),
+					{
+						content: ")",
+						color: Colors.GRAY
+					}
+				]
+			}
+		}
+
 		if (typeof element == "bigint") {
 			return {
 				content: `${element}n`,
 				color: Colors.NUMBER
+			}
+		}
+
+		if (element === undefined) {
+			return {
+				content: "undefined",
+				color: Colors.GRAY
+			}
+		}
+
+		if (element === null) {
+			return {
+				content: "null",
+				color: Colors.GRAY
 			}
 		}
 
@@ -233,11 +263,7 @@
 					{/each}
 				{:else}
 					{#each results as result, i}
-						{@const lastLineNumber = i == 0 ? 0 : results[i - 1].lineNumber}
-						{#each Array((result.lineNumber - lastLineNumber) - 1) as _}
-							<br/>
-						{/each}
-						<p>
+						<p class="absolute" style="top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;">
 							{#each flattenColoredElement(result.content) as line}
 								<span style="color: {line.color};">{line.content}</span>
 							{/each}

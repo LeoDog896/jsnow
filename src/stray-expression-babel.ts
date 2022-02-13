@@ -10,6 +10,7 @@ export default function({ types: t }) {
 		if (path.parentPath.node.type == "CallExpression") return
 		if (path.parentPath.node.type == "AwaitExpression") return
       	if (path.parentPath.node.type == "VariableDeclarator") return
+		if (path.parentPath.node.type == "ConditionalExpression") return
 		if (path.node.loc == null) return
 
 		path.replaceWith(
