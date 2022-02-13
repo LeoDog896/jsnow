@@ -15,9 +15,18 @@ export default function({ types: t }) {
 			BinaryExpression(path) {
 				visit(path)
 			},
+			UnaryExpression(path) {
+				visit(path)
+			},
 			CallExpression(path) {
 				visit(path)
-			}
+			},
+          	AwaitExpression(path) {
+                visit(path) 
+            },
+          	NewExpression(path) {
+            	visit(path) 
+            }
 		}
 	}
 }
