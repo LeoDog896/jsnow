@@ -8,7 +8,7 @@
 	import { indentWithTab } from "@codemirror/commands"
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
-import { compute_rest_props } from "svelte/internal"
+	import variableDebug from "./debug-variable-babel"
 
 	enum Colors {
 		TRUE = "#1f924a",
@@ -164,6 +164,7 @@ import { compute_rest_props } from "svelte/internal"
 
 	Babel.registerPlugin("log-transform", logPlugin)
 	Babel.registerPlugin("stray-expression-babel", strayExpression)
+	Babel.registerPlugin("debug-variable", variableDebug)
 
 	async function run(string: string): Promise<Result[] | Error | null> {
 
@@ -177,7 +178,7 @@ import { compute_rest_props } from "svelte/internal"
 				parserOpts: {
 					allowReturnOutsideFunction: true
 				},
-				plugins: ["log-transform", "stray-expression-babel"]
+				plugins: ["log-transform", "stray-expression-babel", "debug-variable"]
 			}).code
 
 			const asyncFunction = AsyncFunction("debug", babelled)
