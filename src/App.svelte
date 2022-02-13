@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Babel from "@babel/standalone"
 	import Tailwindcss from "./Tailwindcss.svelte"
 	import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
 	import { javascript } from "@codemirror/lang-javascript"
@@ -7,6 +8,7 @@
 	import { indentWithTab } from "@codemirror/commands"
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
+import { compute_rest_props } from "svelte/internal"
 
 	enum Colors {
 		TRUE = "#1f924a",
@@ -134,6 +136,9 @@
 
 	let editor: HTMLDivElement
 
+	let dragValue = window.innerWidth / 2
+	let isBeingDragged = false
+
 	onMount(() => {
 		let view = new EditorView({
 			state: EditorState.create({
@@ -157,8 +162,8 @@
 		content?: ColoredElement
 	}
 
-	window["Babel"].registerPlugin("log-transform", logPlugin)
-	window["Babel"].registerPlugin("stray-expression-babel", strayExpression)
+	Babel.registerPlugin("log-transform", logPlugin)
+	Babel.registerPlugin("stray-expression-babel", strayExpression)
 
 	async function run(string: string): Promise<Result[] | Error | null> {
 
@@ -166,7 +171,7 @@
 		try {
 
 			let unparsedResults: Result[] = []
-			const babelled = window["Babel"].transform(string, { 
+			const babelled = Babel.transform(string, { 
 				filename: "index.ts",
 				presets: ["env", "typescript"],
 				parserOpts: {
@@ -197,11 +202,30 @@
 		}
 	}
 </script>
-<div class="gap-0 grid grid-rows-1 grid-cols-2">
-	<div bind:this={editor}></div>
+<svelte:body
+	on:mousemove={e => {
+		if (isBeingDragged) dragValue = e.clientX
+	}}
+	on:mouseup={e => {
+		isBeingDragged = false
+	}}
+></svelte:body>
+<div style="grid-template-columns: {dragValue}px {window.innerWidth - dragValue}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
+	<div class="flex">
+		<div class="grow" bind:this={editor}></div>
+		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-black" style="left: {dragValue}px;"></div>
+		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+		<div
+			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
+			style="left: {dragValue}px;"
+			on:mousedown={e => {
+				isBeingDragged = true
+			}}
+		></div>
+	</div>
 	{#if value}
 		{#await run(value) then results}
-			<p class="px-1 text-[1rem] leading-[1.4058rem]">
+			<p class="px-1 w-full text-[1rem] leading-[1.4058rem]">
 				{#if results instanceof Error}
 					{#each results.toString().split("\n") as resultLine}
 						<p>{resultLine}</p>
