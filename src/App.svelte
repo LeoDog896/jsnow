@@ -127,9 +127,8 @@
 					{#each results as result, i}
 						<p class="absolute" style="top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;">
 							{#each flattenColoredElement(result.content) as line}
-								<span style="color: {line.color};">{
+								<span style="color: {line.color};">{@html
 									line.content
-										.replaceAll(" ", "&nbsp;")
 								}</span>
 							{/each}
 						</p>

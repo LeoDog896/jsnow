@@ -42,10 +42,6 @@ export default function({ types: t }) {
             },
 			Literal(path) {
 				expression(path)
-			},
-			Directive(path) {
-				if (path.node.value == null) return
-				expression(path, t.stringLiteral(path.node.value.value))
 			}
 		}
 	}
