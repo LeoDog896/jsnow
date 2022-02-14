@@ -9,141 +9,7 @@
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
 	import variableDebug from "./debug-variable-babel"
-
-	enum Colors {
-		TRUE = "#1f924a",
-		FALSE = "#f55442",
-		NUMBER = "#368aa3",
-		STRING = "#9c8e1f",
-		GRAY = "#807b7a"
-	}
-
-	function flattenColoredElement(element: ColoredElement): ColoredElement[] {
-
-		if (typeof element.content == "string") return [{
-			content: element.content,
-			color: element.color
-		}]
-
-		return element.content.flat()
-	}
-
-	interface ColoredElement {
-		content: string | ColoredElement[],
-		color?: Colors
-	}
-
-	function stringify(element: any): ColoredElement {
-		if (Array.isArray(element)) {
-
-			return {
-				content: [
-					{
-						content: "[",
-						color: Colors.GRAY
-					},
-					...element.map((it, index) => {
-
-						if (index + 1 == element.length) return stringify(it)
-
-						return [stringify(it), {
-							content: ", ",
-							color: Colors.GRAY
-						}]
-					}).flat(),
-					{
-						content: "]",
-						color: Colors.GRAY
-					}
-				]
-			}
-		}
-
-		if (isPromise(element)) {
-			return {
-				content: "Promise",
-				color: Colors.GRAY
-			}
-		}
-
-		if (element === true) {
-			return {
-				content: "true",
-				color: Colors.TRUE
-			}
-		}
-
-		if (element === false) {
-			return {
-				content: "false",
-				color: Colors.FALSE
-			}
-		}
-
-
-		if (typeof element == "number") {
-			return {
-				content: element.toString(),
-				color: Colors.NUMBER
-			}
-		}
-
-		if (typeof element == "object") {
-			return {
-				content: JSON.stringify(element),
-				color: Colors.GRAY
-			}
-		}
-
-		if (typeof element == "string") {
-			return {
-				content: `"${element}"`,
-				color: Colors.STRING
-			}
-		}
-
-		if (typeof element == "symbol") {
-			return {
-				content: [
-					{
-						content: "Symbol(",
-						color: Colors.GRAY
-					},
-					stringify(element.description),
-					{
-						content: ")",
-						color: Colors.GRAY
-					}
-				]
-			}
-		}
-
-		if (typeof element == "bigint") {
-			return {
-				content: `${element}n`,
-				color: Colors.NUMBER
-			}
-		}
-
-		if (element === undefined) {
-			return {
-				content: "undefined",
-				color: Colors.GRAY
-			}
-		}
-
-		if (element === null) {
-			return {
-				content: "null",
-				color: Colors.GRAY
-			}
-		}
-
-		return {
-			content: element.toString(),
-			color: Colors.GRAY
-		}
-	}
+	import { ColoredElement, stringify, flattenColoredElement } from "./elementParser"
 
 	if ('serviceWorker' in navigator) {
     	navigator.serviceWorker.register('/service-worker.js');
@@ -158,10 +24,6 @@
 			if (update.docChanged) value = update.state.doc.toString()
 		}
 	})
-	
-	const isPromise = promiseToCheck => {
-  		return promiseToCheck && Object.prototype.toString.call(promiseToCheck) === "[object Promise]";
-	}
 
 
 	let editor: HTMLDivElement
@@ -244,7 +106,7 @@
 <div style="grid-template-columns: {dragValue}px {window.innerWidth - dragValue}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div class="flex">
 		<div class="grow" bind:this={editor}></div>
-		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-black" style="left: {dragValue}px;"></div>
+		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {dragValue}px;"></div>
 		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 		<div
 			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
@@ -265,7 +127,10 @@
 					{#each results as result, i}
 						<p class="absolute" style="top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;">
 							{#each flattenColoredElement(result.content) as line}
-								<span style="color: {line.color};">{line.content}</span>
+								<span style="color: {line.color};">{
+									line.content
+										.replaceAll(" ", "&nbsp;")
+								}</span>
 							{/each}
 						</p>
 					{/each}
