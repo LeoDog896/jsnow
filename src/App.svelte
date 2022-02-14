@@ -8,7 +8,6 @@
 	import { indentWithTab } from "@codemirror/commands"
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
-	import variableDebug from "./debug-variable-babel"
 	import { ColoredElement, stringify, flattenColoredElement } from "./elementParser"
 
 	if ('serviceWorker' in navigator) {
@@ -56,7 +55,6 @@
 
 	Babel.registerPlugin("log-transform", logPlugin)
 	Babel.registerPlugin("stray-expression-babel", strayExpression)
-	Babel.registerPlugin("debug-variable", variableDebug)
 
 	async function run(string: string): Promise<Result[] | Error | null> {
 
@@ -70,7 +68,7 @@
 				parserOpts: {
 					allowReturnOutsideFunction: true
 				},
-				plugins: ["log-transform", "stray-expression-babel", "debug-variable"]
+				plugins: ["log-transform", "stray-expression-babel"]
 			}).code
 
 			const asyncFunction = AsyncFunction("debug", babelled)
