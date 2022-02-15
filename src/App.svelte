@@ -46,6 +46,7 @@
 	})
 
 
+	// A reflection trick to get the constructor of an async function.
 	const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
 
 	interface Result {

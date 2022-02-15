@@ -73,10 +73,23 @@ export default function({ types: t }) {
                     ])
                 )
             },
-			Literal(path) {
+			TaggedTemplateExpression(path) {
+				if (path.parentPath.node.type != "ExpressionStatement") return
+				
+				path.parentPath.insertAfter(
+					t.callExpression(t.identifier("debug"), [
+						t.numericLiteral(path.node.loc.start.line),
+						t.identifier(path.toString())
+					])
+				)
+			
+				path.remove()
+		  	},
+		  	Literal(path) {
+				if (path.type == "TemplateLiteral") return
 				expression(path)
-              	visit(path)
-			}
+				visit(path)
+		 	}
 		}
 	}
 }
