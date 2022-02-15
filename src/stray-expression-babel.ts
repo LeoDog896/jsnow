@@ -70,6 +70,7 @@ export default function({ types: t }) {
 				);
 			},
           	AssignmentExpression(path) {
+				if (path.node.loc?.start == null) return
             	path.insertAfter(
                 	t.callExpression(t.identifier("debug"), [
                       	t.numericLiteral(path.node.loc.start.line),
@@ -91,7 +92,8 @@ export default function({ types: t }) {
 			},
 			TaggedTemplateExpression(path) {
 				if (path.parentPath.node.type != "ExpressionStatement") return
-				
+				if (path.node.loc?.start == null) return
+
 				path.parentPath.insertAfter(
 					t.callExpression(t.identifier("debug"), [
 						t.numericLiteral(path.node.loc.start.line),
