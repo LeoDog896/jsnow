@@ -109,6 +109,7 @@
 			data-gramm="false"
 			data-gramm_editor="false"
 			data-enable-grammarly="false"
+			spellcheck="false"
 		></div>
 		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {dragValue}px;"></div>
 		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
