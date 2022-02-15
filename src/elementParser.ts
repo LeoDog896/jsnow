@@ -6,9 +6,15 @@ enum Colors {
     GRAY = "#807b7a"
 }
 
+export type ColoredElement = RecursiveColoredElement | StringColoredElement
 
-export interface ColoredElement {
-    content: string | ColoredElement[],
+export interface RecursiveColoredElement {
+	content: ColoredElement[],
+	color?: Colors
+}
+
+export interface StringColoredElement {
+    content: string,
     color?: Colors
 }
 
@@ -16,14 +22,20 @@ const isPromise = promiseToCheck => {
     return promiseToCheck && Object.prototype.toString.call(promiseToCheck) === "[object Promise]";
 }
 
-export function flattenColoredElement(element: ColoredElement): ColoredElement[] {
+export function flattenColoredElement(element: ColoredElement): StringColoredElement[] {
 
     if (typeof element.content == "string") return [{
         content: element.content,
         color: element.color
     }]
 
-    return element.content.flat()
+    return element.content.map(it => {
+		if (typeof it.content == "string") return it as StringColoredElement
+
+		return (it as RecursiveColoredElement)
+			.content.map(recursive => flattenColoredElement(recursive))
+			.flat()
+	}).flat()
 }
 
 export function stringify(element: any): ColoredElement {

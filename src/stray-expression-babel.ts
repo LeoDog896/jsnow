@@ -26,6 +26,8 @@ export default function({ types: t }) {
 		if (path.parentPath.node.type == "AssignmentExpression") return
 		if (path.parentPath.node.type == "ConditionalExpression") return
 		if (path.parentPath.node.type == "ArrayExpression") return
+		if (path.parentPath.node.type == "ObjectExpression") return
+		if (path.parentPath.node.type == "ObjectProperty") return
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
@@ -82,6 +84,10 @@ export default function({ types: t }) {
             	expression(path)
               	visit(path)
             },
+			ObjectExpression(path) {
+				expression(path)
+				visit(path)
+			},
 			TaggedTemplateExpression(path) {
 				if (path.parentPath.node.type != "ExpressionStatement") return
 				
