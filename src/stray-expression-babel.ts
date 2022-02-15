@@ -25,6 +25,7 @@ export default function({ types: t }) {
       	if (path.parentPath.node.type == "VariableDeclarator") return
 		if (path.parentPath.node.type == "AssignmentExpression") return
 		if (path.parentPath.node.type == "ConditionalExpression") return
+		if (path.parentPath.node.type == "ArrayExpression") return
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
@@ -72,6 +73,14 @@ export default function({ types: t }) {
                     	t.identifier(path.node.left.name)
                     ])
                 )
+            },
+			ArrayExpression(path) {
+            	expression(path)
+                visit(path)
+            },
+			MemberExpression(path) {
+            	expression(path)
+              	visit(path)
             },
 			TaggedTemplateExpression(path) {
 				if (path.parentPath.node.type != "ExpressionStatement") return
