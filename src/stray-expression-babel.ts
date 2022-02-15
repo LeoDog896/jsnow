@@ -28,6 +28,7 @@ export default function({ types: t }) {
 		if (path.parentPath.node.type == "ArrayExpression") return
 		if (path.parentPath.node.type == "ObjectExpression") return
 		if (path.parentPath.node.type == "ObjectProperty") return
+		if (path.parentPath.node.type == "NewExpression") return
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
