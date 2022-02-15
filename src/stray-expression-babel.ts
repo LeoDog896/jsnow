@@ -29,6 +29,8 @@ export default function({ types: t }) {
 		if (path.parentPath.node.type == "ObjectExpression") return
 		if (path.parentPath.node.type == "ObjectProperty") return
 		if (path.parentPath.node.type == "NewExpression") return
+		if (path.parentPath.node.type == "IfStatement") return
+		if (path.parentPath.node.type == "WhileStatement") return
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
