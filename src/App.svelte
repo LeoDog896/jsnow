@@ -104,7 +104,12 @@
 ></svelte:body>
 <div style="grid-template-columns: {dragValue}px {window.innerWidth - dragValue}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div class="flex">
-		<div class="grow" bind:this={editor}></div>
+		<div 
+			class="grow" bind:this={editor}
+			data-gramm="false"
+			data-gramm_editor="false"
+			data-enable-grammarly="false"
+		></div>
 		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {dragValue}px;"></div>
 		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 		<div
