@@ -1,11 +1,9 @@
 <script lang="ts">
 	import Babel from "@babel/standalone"
 	import Tailwindcss from "./Tailwindcss.svelte"
-	import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-	import { javascript } from "@codemirror/lang-javascript"
+	import { EditorState, EditorView, basicSetup } from "./setup"
 	import { onMount } from "svelte"
-	import { ViewPlugin, keymap } from "@codemirror/view"
-	import { indentWithTab } from "@codemirror/commands"
+	import { ViewPlugin } from "@codemirror/view"
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
 	import { ColoredElement, stringify, flattenColoredElement } from "./elementParser"
@@ -30,20 +28,15 @@
 	let dragValue = window.innerWidth / 2
 	let isBeingDragged = false
 
-	onMount(() => {
-		let view = new EditorView({
-			state: EditorState.create({
-				extensions: [
-					basicSetup,
-					javascript({ jsx: false, typescript: true }),
-					updatePlugin,
-					EditorView.lineWrapping,
-					keymap.of([indentWithTab])
-				],
-			}),
-			parent: editor
-		})
-	})
+	onMount(() => new EditorView({
+		state: EditorState.create({
+			extensions: [
+				basicSetup,
+				updatePlugin
+			],
+		}),
+		parent: editor
+	}))
 
 
 	// A reflection trick to get the constructor of an async function.
@@ -67,7 +60,8 @@
 				filename: "index.ts",
 				presets: ["env", "typescript"],
 				parserOpts: {
-					allowReturnOutsideFunction: true
+					allowReturnOutsideFunction: true,
+					allowAwaitOutsideFunction: true
 				},
 				plugins: ["log-transform", "stray-expression-babel"]
 			}).code

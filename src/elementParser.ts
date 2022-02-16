@@ -54,7 +54,7 @@ export function stringify(element: any): ColoredElement {
 				{
 					content: ") ",
 					color: Colors.GRAY
-				}
+				},
                 {
                     content: "[",
                     color: Colors.GRAY
