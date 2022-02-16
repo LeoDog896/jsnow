@@ -14,23 +14,9 @@ export default function({ types: t }) {
 
 		if (replace == null) replace = path.node
 
-		if (path.parentPath.node.type == "CallExpression") return;
-		if (path.parentPath.node.type == "BinaryExpression") return;
-		if (path.parentPath.node.type == "UnaryExpression") return;
-		if (path.parentPath.node.type == "MemberExpression") return;
-		if (path.parentPath.node.type == "ArrowFunctionExpression") return;
-		if (path.parentPath.node.type == "ReturnStatement") return;
-		if (path.parentPath.node.type == "CallExpression") return
-		if (path.parentPath.node.type == "AwaitExpression") return
-      	if (path.parentPath.node.type == "VariableDeclarator") return
-		if (path.parentPath.node.type == "AssignmentExpression") return
-		if (path.parentPath.node.type == "ConditionalExpression") return
-		if (path.parentPath.node.type == "ArrayExpression") return
-		if (path.parentPath.node.type == "ObjectExpression") return
-		if (path.parentPath.node.type == "ObjectProperty") return
-		if (path.parentPath.node.type == "NewExpression") return
-		if (path.parentPath.node.type == "IfStatement") return
-		if (path.parentPath.node.type == "WhileStatement") return
+		if (path.parentPath.node.type != "ExpressionStatement") return;
+		if (path.parentPath.parentPath?.node?.type == "WhileStatmenet") return;
+		if (path.parentPath.parentPath?.node?.type == "ForStatmenet") return;
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
@@ -80,6 +66,10 @@ export default function({ types: t }) {
                     ])
                 )
             },
+			Identifier(path) {
+				expression(path)
+				visit(path)
+			},
 			ArrayExpression(path) {
             	expression(path)
                 visit(path)
@@ -105,6 +95,10 @@ export default function({ types: t }) {
 			
 				path.remove()
 		  	},
+			UpdateExpression(path) {
+				expression(path)
+				visit(path)
+			},
 		  	Literal(path) {
 				if (path.type == "TemplateLiteral") return
 				expression(path)
