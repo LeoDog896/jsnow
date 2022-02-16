@@ -19,7 +19,7 @@ export interface StringColoredElement {
 }
 
 const isPromise = promiseToCheck => {
-    return promiseToCheck && Object.prototype.toString.call(promiseToCheck) === "[object Promise]";
+    return !!promiseToCheck && (typeof promiseToCheck === 'object' || typeof promiseToCheck === 'function') && typeof promiseToCheck.then === 'function';;
 }
 
 export function flattenColoredElement(element: ColoredElement): StringColoredElement[] {

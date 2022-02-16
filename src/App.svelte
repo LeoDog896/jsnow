@@ -74,13 +74,10 @@
 
 			if (unparsedResults.length == 0) return []
 
-			const results: Result[] = unparsedResults.map(result => {
-
-				return {
-					lineNumber: result.lineNumber,
-					content: stringify(result.content)
-				}
-			}).sort((a, b) => a.lineNumber - b.lineNumber)
+			const results: Result[] = unparsedResults.map(result => ({
+				lineNumber: result.lineNumber,
+				content: stringify(result.content)
+			})).sort((a, b) => a.lineNumber - b.lineNumber)
 
 			return results;
 		} catch(e) {
@@ -124,7 +121,9 @@
 					{/each}
 				{:else}
 					{#each results as result, i}
-						<p class="absolute" style="top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;">
+						<p class="absolute" style="
+						top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;
+						">
 							{#each flattenColoredElement(result.content) as line}
 								<span style="color: {line.color};">{@html
 									line.content

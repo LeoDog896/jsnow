@@ -49,7 +49,7 @@ export default function({ types: t }) {
             },
 			DirectiveLiteral(path) {
 				if (!path.node?.value) return
-				if (!path.node.loc?.start) return
+				if (!path.node.loc?.start?.line) return
 				path.parentPath.replaceWith(
 					t.callExpression(t.identifier("debug"), [
 						t.numericLiteral(path.node.loc.start.line),
