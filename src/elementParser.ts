@@ -43,6 +43,18 @@ export function stringify(element: any): ColoredElement {
 
         return {
             content: [
+				{
+					content: "(",
+					color: Colors.GRAY
+				},
+				{
+					content: element.length.toString(),
+					color: Colors.NUMBER
+				},
+				{
+					content: ") ",
+					color: Colors.GRAY
+				}
                 {
                     content: "[",
                     color: Colors.GRAY
