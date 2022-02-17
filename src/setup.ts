@@ -56,7 +56,7 @@ function completeFromGlobalScope(context: CompletionContext) {
 	return null
 }
 
-javascriptLanguage.data.of({
+const javascriptCompletions = javascriptLanguage.data.of({
 	autocomplete: completeFromGlobalScope
 })
 
@@ -88,6 +88,7 @@ export const basicSetup: Extension = [
 		...lintKeymap
 	]),
 	javascript({ jsx: false, typescript: true }),
+	javascriptCompletions,
 	EditorView.lineWrapping,
 	keymap.of([indentWithTab])
 ]

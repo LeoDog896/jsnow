@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Babel from "@babel/standalone"
+	import { transform, registerPlugins } from "@babel/standalone"
 	import Tailwindcss from "./Tailwindcss.svelte"
 	import { EditorState, EditorView, basicSetup } from "./setup"
 	import { onMount } from "svelte"
@@ -47,16 +47,18 @@
 		content?: ColoredElement
 	}
 
-	Babel.registerPlugin("log-transform", logPlugin)
-	Babel.registerPlugin("stray-expression-babel", strayExpression)
-
+	registerPlugins({
+		"stray-expression-babel": strayExpression,
+		"log-transform": logPlugin
+	})
+	
 	async function run(string: string): Promise<Result[] | Error | null> {
 
 		if (string == "") return null
 		try {
 
 			let unparsedResults: Result[] = []
-			const babelled = Babel.transform(string, { 
+			const babelled = transform(string, { 
 				filename: "index.ts",
 				presets: ["env", "typescript"],
 				parserOpts: {
