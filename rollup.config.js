@@ -34,7 +34,7 @@ export default {
 	input: 'src/main.ts',
 	output: {
 		sourcemap: !production,
-		format: 'iife',
+		format: 'umd',
 		name: 'app',
 		file: 'public/build/bundle.js'
 	},
