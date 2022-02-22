@@ -34,7 +34,7 @@ export default {
 	input: 'src/main.ts',
 	output: {
 		sourcemap: !production,
-		format: 'umd',
+		format: 'iife',
 		name: 'app',
 		file: 'public/build/bundle.js'
 	},
@@ -59,7 +59,7 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte', 'svelte/transition', 'svelte/internal']
 		}),
 		commonjs(),
 		typescript({ sourceMap: !production }),

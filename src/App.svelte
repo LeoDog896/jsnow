@@ -7,6 +7,7 @@
 	import logPlugin from "./log-babel"
 	import strayExpression from "./stray-expression-babel"
 	import { ColoredElement, stringify, flattenColoredElement } from "./elementParser"
+	import Modal from 'svelte-simple-modal';
 
 	if ('serviceWorker' in navigator) {
     	navigator.serviceWorker.register('/service-worker.js');
@@ -86,58 +87,69 @@
 			return e
 		}
 	}
+
+	function openSettingsModal() {
+
+	}
 </script>
 <svelte:body
 	on:mousemove={e => {
 		if (isBeingDragged) dragValue = e.clientX
 	}}
-	on:mouseup={e => {
+	on:mouseup={_ => {
 		isBeingDragged = false
 	}}
 ></svelte:body>
-<div style="grid-template-columns: {dragValue}px {window.innerWidth - dragValue}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
-	<div class="flex">
-		<div 
-			class="grow" bind:this={editor}
-			data-gramm="false"
-			data-gramm_editor="false"
-			data-enable-grammarly="false"
-			spellcheck="false"
-		></div>
-		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {dragValue}px;"></div>
-		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
-		<div
-			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
-			style="left: {dragValue}px;"
-			on:mousedown={e => {
-				isBeingDragged = true
-			}}
-		></div>
+<Modal>
+	<img 
+		src="./gear.svg" alt="Settings"
+		class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-5"
+		on:click={openSettingsModal}
+	>
+	<div style="grid-template-columns: {dragValue}px {window.innerWidth - dragValue}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
+		<div class="flex">
+			<div 
+				class="grow" bind:this={editor}
+				data-gramm="false"
+				data-gramm_editor="false"
+				data-enable-grammarly="false"
+				spellcheck="false"
+			></div>
+			<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {dragValue}px;"></div>
+			<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+			<div
+				class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
+				style="left: {dragValue}px;"
+				on:mousedown={e => {
+					isBeingDragged = true
+				}}
+			></div>
+		</div>
+		{#if value}
+			{#await run(value) then results}
+				<p class="px-1 w-full text-[1rem] leading-[1.4058rem]">
+					{#if results instanceof Error}
+						{#each results.toString().split("\n") as resultLine}
+							<p>{resultLine}</p>
+						{/each}
+					{:else}
+						{#each results as result, i}
+							<p class="absolute" style="
+							top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;
+							">
+								{#each flattenColoredElement(result.content) as line}
+									<span style="color: {line.color};">{@html
+										line.content
+									}</span>
+								{/each}
+							</p>
+						{/each}
+					{/if}
+				</p>
+			{/await}
+		{/if}
 	</div>
-	{#if value}
-		{#await run(value) then results}
-			<p class="px-1 w-full text-[1rem] leading-[1.4058rem]">
-				{#if results instanceof Error}
-					{#each results.toString().split("\n") as resultLine}
-						<p>{resultLine}</p>
-					{/each}
-				{:else}
-					{#each results as result, i}
-						<p class="absolute" style="
-						top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;
-						">
-							{#each flattenColoredElement(result.content) as line}
-								<span style="color: {line.color};">{@html
-									line.content
-								}</span>
-							{/each}
-						</p>
-					{/each}
-				{/if}
-			</p>
-		{/await}
-	{/if}
-</div>
+</Modal>
 <Tailwindcss />
 <style>
 	:global(.cm-scroller) { 

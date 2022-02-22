@@ -15,6 +15,7 @@ export default function({ types: t }) {
 		if (replace == null) replace = path.node
 
 		if (path.parentPath.node.type != "ExpressionStatement") return;
+		if (path.node.callee?.identifier == "debug") return;
 		if (path.parentPath.parentPath?.node?.type == "WhileStatmenet") return;
 		if (path.parentPath.parentPath?.node?.type == "ForStatmenet") return;
 		if (path.node.loc?.start == null) return
