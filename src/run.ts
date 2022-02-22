@@ -16,9 +16,9 @@ registerPlugins({
 	"log-transform": logPlugin
 })
 
-export async function run(string: string): Promise<Result[] | Error | null> {
+export async function run(string: string): Promise<Result[] | Error> {
 
-	if (string == "") return null
+	if (string == "") return []
 	try {
 
 		let unparsedResults: Result[] = []
@@ -26,7 +26,6 @@ export async function run(string: string): Promise<Result[] | Error | null> {
 			filename: "index.ts",
 			presets: ["env", "typescript"],
 			parserOpts: {
-				allowReturnOutsideFunction: true,
 				allowAwaitOutsideFunction: true
 			},
 			plugins: ["log-transform", "stray-expression-babel"]

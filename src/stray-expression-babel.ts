@@ -1,3 +1,6 @@
+import { lineByLine } from "./settings";
+import { get } from "svelte/store"
+
 export default function({ types: t }) {
 
     function visit(path) {
@@ -16,8 +19,11 @@ export default function({ types: t }) {
 
 		if (path.parentPath.node.type != "ExpressionStatement") return;
 		if (path.node.callee?.identifier == "debug") return;
-		if (path.parentPath.parentPath?.node?.type == "WhileStatmenet") return;
-		if (path.parentPath.parentPath?.node?.type == "ForStatmenet") return;
+
+		if (get(lineByLine)) {
+			if (path.parentPath.parentPath?.node?.type == "WhileStatement") return;
+			if (path.parentPath.parentPath?.node?.type == "ForStatement") return;
+		}
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
