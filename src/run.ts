@@ -16,8 +16,6 @@ registerPlugins({
 	"log-transform": logPlugin
 })
 
-export const code = writable
-
 export async function run(string: string): Promise<Result[] | Error | null> {
 
 	if (string == "") return null

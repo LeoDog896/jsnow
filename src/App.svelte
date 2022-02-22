@@ -4,20 +4,18 @@
 	import { onMount } from "svelte"
 	import { ViewPlugin } from "@codemirror/view"
 	import { flattenColoredElement } from "./elementParser"
-	import { run } from "./run"
+	import { code, runCode } from "./code"
 	import Modal from 'svelte-simple-modal';
 
 	if ('serviceWorker' in navigator) {
     	navigator.serviceWorker.register('/service-worker.js');
     }
 
-	let value: string = ""
-
 	const updatePlugin = ViewPlugin.fromClass(class {
 		constructor() {}
 
 		update(update) {
-			if (update.docChanged) value = update.state.doc.toString()
+			if (update.docChanged) code.set(update.state.doc.toString())
 		}
 	})
 
@@ -69,20 +67,19 @@
 			<div
 				class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
 				style="left: {dragValue}px;"
-				on:mousedown={e => {
+				on:mousedown={() => {
 					isBeingDragged = true
 				}}
 			></div>
 		</div>
-		{#if value}
-			{#await run(value) then results}
+			{#await $runCode then results}
 				<p class="px-1 w-full text-[1rem] leading-[1.4058rem]">
 					{#if results instanceof Error}
 						{#each results.toString().split("\n") as resultLine}
-							<p>{resultLine}</p>
+							<p class="text-red-700">{resultLine}</p>
 						{/each}
 					{:else}
-						{#each results as result, i}
+						{#each results as result}
 							<p class="absolute" style="
 							top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;
 							">
@@ -96,7 +93,6 @@
 					{/if}
 				</p>
 			{/await}
-		{/if}
 	</div>
 </Modal>
 <Tailwindcss />
