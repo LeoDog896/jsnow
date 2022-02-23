@@ -19,5 +19,7 @@ export const babelledCode = derived(code, newCode => {
 export const runCode = derived([babelledCode, lineByLine, isBeingDragged], async ([newCode]) => {
 	if (!newCode) return []
 
+	if (newCode instanceof Error) return newCode
+
 	return await run(newCode)
 })
