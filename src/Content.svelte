@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Tailwindcss from "./Tailwindcss.svelte"
 	import { EditorState, EditorView, basicSetup } from "./setup"
 	import { onMount } from "svelte"
 	import { ViewPlugin } from "@codemirror/view"
@@ -10,10 +9,6 @@
 	import { isBeingDragged, dragDistance } from "./dragbar"
 	import { lineByLine } from "./settings";
 	const { open } = getContext('simple-modal');
-
-	if ('serviceWorker' in navigator) {
-    	navigator.serviceWorker.register('/service-worker.js');
-    }
 
 	const updatePlugin = ViewPlugin.fromClass(class {
 		constructor() {}
@@ -98,7 +93,6 @@
 			</p>
 		{/await}
 </div>
-<Tailwindcss />
 <style>
 	:global(.cm-scroller) { 
 		overflow: scroll-y;

@@ -1,13 +1,34 @@
-# jsnow
+STTV - Svelte / Typescript / Tailwind / Vite Template
+=====================================================
 
-A simple runner of JS that executes JS as you type. Located at https://leodog896.github.io/jsnow.
+Get up and running with Svelte, Typescript, Tailwind and Vite. Also includes testing setup using Jest.
 
-## How?
+Installation
+------------
 
-### Babel
+```
+npx degit "srmullen/sttv#main" my_app
+cd my_app
+npm install
+```
 
-Babel is used to compile both TypeScript and new ES Features, as well as adding implicit checkpoints.
+Scripts
+-------
 
-By injecting a debug(lineNumber, value) function at unused values or variables after initializaiton or assignment
+### Start a development server
 
-Wrapping this in an AsyncFunction constructor also allows for tol-level await.
+`npm run dev`
+
+### Run tests
+
+`npm run test`
+or
+`npm run test:watch`
+
+### Build the application
+
+`npm run build`
+
+### Serve the application
+
+`npm run serve`
