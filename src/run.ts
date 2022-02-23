@@ -16,22 +16,25 @@ registerPlugins({
 	"log-transform": logPlugin
 })
 
+export function transformCode(code: string): string {
+	return transform(code, { 
+		filename: "index.ts",
+		presets: ["env", "typescript"],
+		parserOpts: {
+			allowAwaitOutsideFunction: true
+		},
+		plugins: ["log-transform", "stray-expression-babel"]
+	}).code
+}
+
 export async function run(string: string): Promise<Result[] | Error> {
 
 	if (string == "") return []
 	try {
 
 		let unparsedResults: Result[] = []
-		const babelled = transform(string, { 
-			filename: "index.ts",
-			presets: ["env", "typescript"],
-			parserOpts: {
-				allowAwaitOutsideFunction: true
-			},
-			plugins: ["log-transform", "stray-expression-babel"]
-		}).code
 
-		const asyncFunction = AsyncFunction("debug", babelled)
+		const asyncFunction = AsyncFunction("debug", string)
 		
 		await asyncFunction((lineNumber: number, content?: any) => {
 			unparsedResults = [...unparsedResults, { lineNumber, content }]

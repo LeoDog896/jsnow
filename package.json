@@ -22,6 +22,7 @@
 		"codemirror": "^5.65.1",
 		"postcss": "^8.4.4",
 		"postcss-load-config": "^3.1.0",
+		"prismjs": "^1.27.0",
 		"rollup": "^2.60.2",
 		"rollup-plugin-css-only": "^3.1.0",
 		"rollup-plugin-livereload": "^2.0.0",

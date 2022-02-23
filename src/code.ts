@@ -2,10 +2,21 @@ import { writable, derived } from "svelte/store"
 import { run } from "./run"
 import { lineByLine } from "./settings"
 import { isBeingDragged } from "./dragbar"
+import { transformCode } from "./run"
 
 export const code = writable("")
 
-export const runCode = derived([code, lineByLine, isBeingDragged], async ([newCode]) => {
+export const babelledCode = derived(code, newCode => {
+
+	if (!newCode) return ""
+	try {
+		return transformCode(newCode)
+	} catch (e) {
+		return e
+	}
+})
+
+export const runCode = derived([babelledCode, lineByLine, isBeingDragged], async ([newCode]) => {
 	if (!newCode) return []
 
 	return await run(newCode)
