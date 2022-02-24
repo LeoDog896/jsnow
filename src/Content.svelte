@@ -40,7 +40,7 @@
 	}}
 ></svelte:body>
 <img 
-	src="./gear.svg" alt="Settings"
+	src="./assets/gear.svg" alt="Settings"
 	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-5"
 	on:click={() => open(Settings)}
 >
