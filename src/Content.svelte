@@ -78,8 +78,8 @@
 						<p class="text-red-700">{resultLine}</p>
 					{/each}
 				{:else}
-					{#each results as result}
-						{#if $lineByLine}
+					{#if $lineByLine}
+						{#each results.sort((a, b) => a.lineNumber - b.lineNumber) as result}
 							<p class="absolute" style="
 							top: {document.querySelector(".cm-content").children[result.lineNumber - 1].getBoundingClientRect().y}px;
 							">
@@ -89,14 +89,16 @@
 									}</span>
 								{/each}
 							</p>
-						{:else}
+						{/each}
+					{:else}
+						{#each results as result}
 							<p>
 								{#each flattenColoredElement(result.content) as line}
 									<span style="color: {line.color};">{@html line.content}</span>
 								{/each}
 							</p>
-						{/if}
-					{/each}
+						{/each}
+					{/if}
 				{/if}
 			</p>
 		{/await}

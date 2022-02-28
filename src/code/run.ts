@@ -45,7 +45,7 @@ export async function run(string: string): Promise<Result[] | Error> {
 		const results: Result[] = unparsedResults.map(result => ({
 			lineNumber: result.lineNumber,
 			content: stringify(result.content)
-		})).sort((a, b) => a.lineNumber - b.lineNumber)
+		}))
 
 		return results;
 	} catch(e) {
