@@ -5,11 +5,13 @@
 	import { flattenColoredElement } from "./elementParser"
 	import { code, runCode } from "./code/code"
 	import Settings from "./settings/Settings.svelte"
-	import Gear from "../assets/gear.svg"
+	import Info from "./Info.svelte"
 	import { getContext } from 'svelte';
 	import { isBeingDragged, dragDistance } from "./dragbar"
 	import { lineByLine } from "./settings/settings"
 	const { open } = getContext('simple-modal');
+	import SettingsIcon from '@indaco/svelte-iconoir/icons/SettingsIcon.svelte';
+	import QuestionMarkIcon from '@indaco/svelte-iconoir/icons/QuestionMarkIcon.svelte';
 
 	const updatePlugin = ViewPlugin.fromClass(class {
 		constructor() {}
@@ -40,11 +42,16 @@
 		$isBeingDragged = false
 	}}
 ></svelte:body>
-<img 
-	src={Gear} alt="Settings"
+<SettingsIcon 
+	alt="Settings"
 	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-5"
 	on:click={() => open(Settings)}
->
+/>
+<QuestionMarkIcon 
+	alt="Info"
+	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-[60px]"
+	on:click={() => open(Info)}
+/>
 <div style="grid-template-columns: {$dragDistance}px {window.innerWidth - $dragDistance}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div class="flex">
 		<div 
