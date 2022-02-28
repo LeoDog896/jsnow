@@ -45,6 +45,7 @@
     "vite": "^2.8.4",
     "vite-plugin-favicon": "^1.0.8",
     "vite-plugin-favicon2": "^1.1.4",
+    "vite-plugin-pages-sitemap": "^1.1.11",
     "vite-plugin-pwa": "^0.11.13"
   }
 }
