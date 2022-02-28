@@ -1,7 +1,8 @@
-# jsnow
+# jsnow <img src="./assets/logo.svg" height="60" align="right" alt="JSNow Logo">
 
-![GitHub](https://img.shields.io/github/license/LeoDog896/jsnow?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/LeoDog896/jsnow?style=for-the-badge)
+[![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
+![GitHub](https://img.shields.io/github/license/LeoDog896/jsnow)
+![GitHub Repo stars](https://img.shields.io/github/stars/LeoDog896/jsnow)
 
 A simple JavaScript / TypeScript evaulator. Outputs line by line output.
 
@@ -16,3 +17,16 @@ For example, `5 == 5` becomes `debug(1, 5 == 5)`
 ## Contributing
 
 Feel free to submit a pull request or issue! Feedback is greately appreciated!
+
+### Development
+
+Run `npm run dev` to start automatically building the site.
+
+
+### Building
+
+Run `npm run build` to build the site. It will output to `dist/`.
+
+## License
+
+[AGPLv3](./LICENSE)
