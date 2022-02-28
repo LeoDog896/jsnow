@@ -3,12 +3,12 @@
 	import { onMount } from "svelte"
 	import { ViewPlugin } from "@codemirror/view"
 	import { flattenColoredElement } from "./elementParser"
-	import { code, runCode } from "./code"
-	import Settings from "./Settings.svelte"
+	import { code, runCode } from "./code/code"
+	import Settings from "./settings/Settings.svelte"
 	import Gear from "../assets/gear.svg"
 	import { getContext } from 'svelte';
 	import { isBeingDragged, dragDistance } from "./dragbar"
-	import { lineByLine } from "./settings";
+	import { lineByLine } from "./settings/settings"
 	const { open } = getContext('simple-modal');
 
 	const updatePlugin = ViewPlugin.fromClass(class {

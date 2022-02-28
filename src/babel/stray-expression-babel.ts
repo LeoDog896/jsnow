@@ -1,4 +1,4 @@
-import { lineByLine } from "./settings";
+import { lineByLine } from "../settings/settings";
 import { get } from "svelte/store"
 
 export default function({ types: t }) {

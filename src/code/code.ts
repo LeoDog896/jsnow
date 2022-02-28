@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store"
 import { run } from "./run"
-import { lineByLine } from "./settings"
-import { isBeingDragged } from "./dragbar"
+import { lineByLine } from "../settings/settings"
+import { isBeingDragged } from "../dragbar"
 import { transformCode } from "./run"
 
 export const code = writable("")

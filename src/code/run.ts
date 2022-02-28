@@ -1,7 +1,7 @@
 import { transform, registerPlugins } from "@babel/standalone"
-import logPlugin from "./log-babel"
-import strayExpression from "./stray-expression-babel"
-import { ColoredElement, stringify } from "./elementParser"
+import logPlugin from "../babel/log-babel"
+import strayExpression from "../babel/stray-expression-babel"
+import { ColoredElement, stringify } from "../elementParser"
 
 // A reflection trick to get the constructor of an async function.
 const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
