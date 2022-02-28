@@ -1,8 +1,5 @@
 # jsnow <img src="./assets/logo.svg" height="60" align="right" alt="JSNow Logo">
 
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://github.com/LeoDog896)
-[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://now.js.org)
-
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 ![GitHub](https://img.shields.io/github/license/LeoDog896/jsnow)
 ![GitHub Repo stars](https://img.shields.io/github/stars/LeoDog896/jsnow)
