@@ -1,5 +1,8 @@
 # jsnow
 
+![GitHub](https://img.shields.io/github/license/LeoDog896/jsnow?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/LeoDog896/jsnow?style=for-the-badge)
+
 A simple JavaScript / TypeScript evaulator. Outputs line by line output.
 
 Site at: https://now.js.org
