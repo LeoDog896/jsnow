@@ -85,7 +85,7 @@
 						{:else}
 							<p>
 								{#each flattenColoredElement(result.content) as line}
-									<p style="color: {line.color};">{@html line.content}</p>
+									<span style="color: {line.color};">{@html line.content}</span>
 								{/each}
 							</p>
 						{/if}
