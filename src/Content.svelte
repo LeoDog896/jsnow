@@ -5,6 +5,7 @@
 	import { flattenColoredElement } from "./elementParser"
 	import { code, runCode } from "./code"
 	import Settings from "./Settings.svelte"
+	import Gear from "../assets/gear.svg"
 	import { getContext } from 'svelte';
 	import { isBeingDragged, dragDistance } from "./dragbar"
 	import { lineByLine } from "./settings";
@@ -40,7 +41,7 @@
 	}}
 ></svelte:body>
 <img 
-	src="./assets/gear.svg" alt="Settings"
+	src={Gear} alt="Settings"
 	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-5"
 	on:click={() => open(Settings)}
 >
