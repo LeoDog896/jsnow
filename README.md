@@ -1,34 +1,15 @@
-STTV - Svelte / Typescript / Tailwind / Vite Template
-=====================================================
+# jsnow
 
-Get up and running with Svelte, Typescript, Tailwind and Vite. Also includes testing setup using Jest.
+A simple JavaScript / TypeScript evaulator. Outputs line by line output.
 
-Installation
-------------
+Site at: https://now.js.org
 
-```
-npx degit "srmullen/sttv#main" my_app
-cd my_app
-npm install
-```
+## How does it work?
 
-Scripts
--------
+Using babel plugins, a debug(lineNumber, expression) function is inserted whenever appropiate.
 
-### Start a development server
+For example, `5 == 5` becomes `debug(1, 5 == 5)`
 
-`npm run dev`
+## Contributing
 
-### Run tests
-
-`npm run test`
-or
-`npm run test:watch`
-
-### Build the application
-
-`npm run build`
-
-### Serve the application
-
-`npm run serve`
+Feel free to submit a pull request or issue! Feedback is greately appreciated!
