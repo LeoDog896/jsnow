@@ -24,7 +24,7 @@
 	{#if highlightedCode}
 		<div id="code" class="w-1/2">
 			<h1 class="text-2xl">Transformed Code</h1>
-			<code>{@html highlightedCode}</code>
+			<pre><code class="language-js">{@html highlightedCode}</code></pre>
 		</div>
 	{/if}
 </div>
