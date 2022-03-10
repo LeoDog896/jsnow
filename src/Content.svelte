@@ -7,7 +7,7 @@
 	import Settings from "./settings/Settings.svelte"
 	import Info from "./Info.svelte"
 	import { getContext } from 'svelte';
-	import { isBeingDragged, dragDistance } from "./dragbar"
+	import { isBeingDragged, dragDistance, cappedDragDistance } from "./dragbar"
 	import { lineByLine } from "./settings/settings"
 	const { open } = getContext('simple-modal');
 	import SettingsIcon from '@indaco/svelte-iconoir/icons/SettingsIcon.svelte';
@@ -26,6 +26,7 @@
 
 	onMount(() => new EditorView({
 		state: EditorState.create({
+			doc: $code,
 			extensions: [
 				basicSetup,
 				updatePlugin
@@ -52,7 +53,7 @@
 	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-[60px]"
 	on:click={() => open(Info)}
 />
-<div style="grid-template-columns: {$dragDistance}px {window.innerWidth - $dragDistance}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
+<div style="grid-template-columns: {$cappedDragDistance}px {window.innerWidth - $cappedDragDistance}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div class="flex">
 		<div 
 			class="grow outline-none" bind:this={editor}
@@ -61,11 +62,11 @@
 			data-enable-grammarly="false"
 			spellcheck="false"
 		></div>
-		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2" style="left: {$dragDistance}px;"></div>
+		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2" style="left: {$cappedDragDistance}px;"></div>
 		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 		<div
 			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
-			style="left: {$dragDistance}px;"
+			style="left: {$cappedDragDistance}px;"
 			on:mousedown={() => {
 				$isBeingDragged = true
 			}}
