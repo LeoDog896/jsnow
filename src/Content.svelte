@@ -55,13 +55,13 @@
 <div style="grid-template-columns: {$dragDistance}px {window.innerWidth - $dragDistance}px;" class="gap-0 grid grid-rows-1 grid-cols-2">
 	<div class="flex">
 		<div 
-			class="grow" bind:this={editor}
+			class="grow outline-none" bind:this={editor}
 			data-gramm="false"
 			data-gramm_editor="false"
 			data-enable-grammarly="false"
 			spellcheck="false"
 		></div>
-		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey" style="left: {$dragDistance}px;"></div>
+		<div class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2" style="left: {$dragDistance}px;"></div>
 		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 		<div
 			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
