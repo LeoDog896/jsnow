@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg" />
-	<meta name="google-site-verification" content="EN9ejvJZI3Jp_WOVgiIBDT77hBxeMx3wjohjEJzWTcw" />
+  	<meta name="google-site-verification" content="EN9ejvJZI3Jp_WOVgiIBDT77hBxeMx3wjohjEJzWTcw" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
@@ -16,6 +16,12 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>window.global = window;</script>
+    <script type="module">
+        import { Buffer } from "buffer/"; // <-- no typo here ("/")
+            
+        window.Buffer = Buffer;
+    </script>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
