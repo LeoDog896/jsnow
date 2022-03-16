@@ -9,10 +9,6 @@
     "serve": "vite preview"
   },
   "devDependencies": {
-    "@babel/generator": "^7.17.3",
-    "@babel/parser": "^7.17.3",
-    "@babel/traverse": "^7.17.3",
-    "@babel/types": "^7.17.0",
     "@codemirror/closebrackets": "^0.19.1",
     "@codemirror/commands": "^0.19.8",
     "@codemirror/comment": "^0.19.1",
@@ -28,6 +24,7 @@
     "@codemirror/view": "^0.19.45",
     "@indaco/svelte-iconoir": "^2.3.0",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.37",
+    "@swc/wasm-web": "^1.2.156",
     "@testing-library/svelte": "^3.0.3",
     "@types/jest": "^26.0.21",
     "autoprefixer": "^10.2.5",

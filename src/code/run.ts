@@ -1,9 +1,8 @@
-import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import generate from "@babel/generator";
-import logPlugin from "../babel/log-babel"
-import strayExpression from "../babel/stray-expression-babel"
 import { ColoredElement, stringify } from "../elementParser"
+
+const swc = await import(/* @vite-ignore */ "https://cdn.jsdelivr.net/npm/@swc/wasm-web@1.2.156/wasm.js")
+
+await swc.default()
 
 // A reflection trick to get the constructor of an async function.
 const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
@@ -14,10 +13,9 @@ interface Result {
 }
 
 export function transformCode(code: string): string {
-	const ast = parse(code);
-	traverse(ast, strayExpression());
-	traverse(ast, logPlugin());
-	return generate(ast).code;
+  return swc.transformSync(code, {
+    strictMode: false
+  }).code
 }
 
 export async function run(string: string): Promise<Result[] | Error> {
@@ -42,6 +40,9 @@ export async function run(string: string): Promise<Result[] | Error> {
 
 		return results;
 	} catch(e) {
+
+    console.error(e)
+
 		return e
 	}
 }
