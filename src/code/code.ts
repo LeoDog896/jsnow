@@ -1,4 +1,4 @@
-import { writable, derived, Readable } from "svelte/store"
+import { writable, derived } from "svelte/store"
 import { run } from "./run"
 import { lineByLine } from "../settings/settings"
 import { isBeingDragged } from "../dragbar"
@@ -19,23 +19,20 @@ reverse("Hello World!")
 // Try it out! Stay with the examples here or CTRL + A and delete.
 `)
 
-export const transformedCode: Readable<string | Error> = derived(code, newCode => {
+export const babelledCode = derived(code, newCode => {
 
 	if (!newCode) return ""
 	try {
 		return transformCode(newCode)
 	} catch (e) {
-
-    if (!(e instanceof Error)) return ""
-
 		return e
 	}
 })
 
-export const runCode = derived([transformedCode, lineByLine, isBeingDragged], ([newCode]) => {
+export const runCode = derived([babelledCode, lineByLine, isBeingDragged], async ([newCode]) => {
 	if (!newCode) return []
 
 	if (newCode instanceof Error) return newCode
 
-	return run(newCode)
+	return await run(newCode)
 })
