@@ -16,10 +16,11 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>window.global = window;</script>
     <script type="module">
         import * as Buffer from "buffer/";
             
-        globalThis.Buffer = Buffer.Buffer;
+        window.Buffer = Buffer.Buffer;
     </script>
     <script type="module" src="./src/main.ts"></script>
   </body>
