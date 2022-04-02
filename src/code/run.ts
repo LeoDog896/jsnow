@@ -1,6 +1,6 @@
-import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import generate from "@babel/generator";
+import * as parser from "@babel/parser";
+import * as traverse from "@babel/traverse";
+import * as generate from "@babel/generator";
 import logPlugin from "../babel/log-babel"
 import strayExpression from "../babel/stray-expression-babel"
 import { ColoredElement, stringify } from "../elementParser"
@@ -14,10 +14,10 @@ interface Result {
 }
 
 export function transformCode(code: string): string {
-	const ast = parse(code);
-	traverse(ast, strayExpression());
-	traverse(ast, logPlugin());
-	return generate(ast).code;
+	const ast = parser.parse(code);
+	traverse.default(ast, strayExpression());
+	traverse.default(ast, logPlugin());
+	return generate.default(ast).code;
 }
 
 export async function run(string: string): Promise<Result[] | Error> {

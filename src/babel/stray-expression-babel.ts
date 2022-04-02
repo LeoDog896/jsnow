@@ -1,6 +1,6 @@
 import { lineByLine } from "../settings/settings";
 import { get } from "svelte/store"
-import { identifier, callExpression, numericLiteral, stringLiteral } from "@babel/types";
+import * as t from "@babel/types";
 import type { TraverseOptions, Node } from "@babel/traverse";
 
 export default function(): TraverseOptions<Node> {
@@ -11,7 +11,7 @@ export default function(): TraverseOptions<Node> {
           const variableName = path.parentPath.node.id.name
 
           path.parentPath.parentPath.insertAfter(
-              callExpression(identifier("debug"), [identifier(path.node.loc.start.line.toString()), identifier(variableName)])
+              t.callExpression(t.identifier("debug"), [t.identifier(path.node.loc.start.line.toString()), t.identifier(variableName)])
           );
     }
   
@@ -29,7 +29,7 @@ export default function(): TraverseOptions<Node> {
 		if (path.node.loc?.start == null) return
 
 		path.replaceWith(
-			callExpression(identifier("debug"), [numericLiteral(path.node.loc.start.line), replace])
+			t.callExpression(t.identifier("debug"), [t.numericLiteral(path.node.loc.start.line), replace])
 		);
 	}
 
@@ -59,18 +59,18 @@ export default function(): TraverseOptions<Node> {
 			if (!path.node?.value) return
 			if (!path.node.loc?.start?.line) return
 			path.parentPath.replaceWith(
-				callExpression(identifier("debug"), [
-					numericLiteral(path.node.loc.start.line),
-					stringLiteral(path.node.value)
+				t.callExpression(t.identifier("debug"), [
+					t.numericLiteral(path.node.loc.start.line),
+					t.stringLiteral(path.node.value)
 				])
 			);
 		},
 		AssignmentExpression(path) {
 			if (path.node.loc?.start == null) return
 			path.insertAfter(
-				callExpression(identifier("debug"), [
-					numericLiteral(path.node.loc.start.line),
-					identifier(path.node.left["name"])
+				t.callExpression(t.identifier("debug"), [
+					t.numericLiteral(path.node.loc.start.line),
+					t.identifier(path.node.left["name"])
 				])
 			)
 		},
@@ -95,9 +95,9 @@ export default function(): TraverseOptions<Node> {
 			if (path.node.loc?.start == null) return
 
 			path.parentPath.insertAfter(
-				callExpression(identifier("debug"), [
-					numericLiteral(path.node.loc.start.line),
-					identifier(path.toString())
+				t.callExpression(t.identifier("debug"), [
+					t.numericLiteral(path.node.loc.start.line),
+					t.identifier(path.toString())
 				])
 			)
 		

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Prism from "prismjs"
+	import * as Prism from "prismjs"
 	import GithubIcon from '@indaco/svelte-iconoir/icons/GitHubIcon.svelte';
 	
 	function highlight(text: string): string {

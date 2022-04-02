@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { lineByLine } from "./settings"
-	import Prism from 'prismjs';
+	import * as Prism from 'prismjs';
 	import { babelledCode } from "../code/code";
 
 	function highlight(text: string): string {
