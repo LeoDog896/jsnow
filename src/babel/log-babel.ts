@@ -1,11 +1,10 @@
 // Changes all instances of console.log to use the debug(line, param, ...params) function
 // Based off of https://babeljs.io/docs/en/babel-plugin-transform-remove-console/#usage
 
-import * as t from "@babel/types";
 import type { TraverseOptions, Node } from "@babel/traverse";
 
-export default function(): TraverseOptions<Node> {
-	return {
+export default function({ types: t }): { visitor: TraverseOptions<Node> } {
+	return { visitor: {
 		MemberExpression(path) {
 			if (!path.node.object) return;
 			if (!path.node.property) return;
@@ -17,5 +16,5 @@ export default function(): TraverseOptions<Node> {
 			path.parentPath.node["arguments"] = [t.identifier(path.node.loc.start.line.toString()), ...path.parentPath.node["arguments"]];
 			path.replaceWith(t.identifier("debug"));
 		}
-	}
+  }}
 };

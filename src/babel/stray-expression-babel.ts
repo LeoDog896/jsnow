@@ -1,9 +1,8 @@
 import { lineByLine } from "../settings/settings";
 import { get } from "svelte/store"
-import * as t from "@babel/types";
 import type { TraverseOptions, Node } from "@babel/traverse";
 
-export default function(): TraverseOptions<Node> {
+export default function({ types: t }): { visitor: TraverseOptions<Node> } {
 
     function visit(path) {
           if (path.parentPath.node.type !== "VariableDeclarator") return
@@ -33,7 +32,7 @@ export default function(): TraverseOptions<Node> {
 		);
 	}
 
-	return {
+	return { visitor: {
 		BinaryExpression(path) {
 			expression(path)
 			visit(path)
@@ -113,5 +112,5 @@ export default function(): TraverseOptions<Node> {
 			visit(path)
 		}
 	
-	}
+  }}
 }

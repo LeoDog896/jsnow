@@ -1,6 +1,4 @@
-import * as parser from "@babel/parser";
-import * as traverse from "@babel/traverse";
-import * as generate from "@babel/generator";
+import { transform, registerPlugins } from "@babel/standalone"
 import logPlugin from "../babel/log-babel"
 import strayExpression from "../babel/stray-expression-babel"
 import { ColoredElement, stringify } from "../elementParser"
@@ -13,11 +11,20 @@ interface Result {
 	content?: ColoredElement
 }
 
+registerPlugins({
+	"stray-expression-babel": strayExpression,
+	"log-transform": logPlugin
+})
+
 export function transformCode(code: string): string {
-	const ast = parser.parse(code);
-	traverse.default(ast, strayExpression());
-	traverse.default(ast, logPlugin());
-	return generate.default(ast).code;
+	return transform(code, { 
+		filename: "index.ts",
+		presets: ["env", "typescript"],
+		parserOpts: {
+			allowAwaitOutsideFunction: true
+		},
+		plugins: ["log-transform", "stray-expression-babel"]
+	}).code
 }
 
 export async function run(string: string): Promise<Result[] | Error> {
