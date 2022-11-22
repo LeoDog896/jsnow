@@ -6,7 +6,7 @@
 		if (!text) return '';
 
 		try {
-			return Prism.highlight(text, Prism.languages['javascript']);
+			return Prism.highlight(text, Prism.languages['javascript'], "javascript");
 		} catch {
 			return '';
 		}

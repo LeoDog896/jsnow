@@ -3,3 +3,5 @@
 /.vscode/
 .DS_Store
 public/sitemap.xml
+.svelte-kit
+build

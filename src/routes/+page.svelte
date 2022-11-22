@@ -1,8 +1,9 @@
 <script lang="ts">
+	import "../main.postcss"
 	import Modal from 'svelte-simple-modal';
-	import Content from './Content.svelte';
+	import Content from '$lib/Content.svelte';
 	import { fade } from 'svelte/transition';
-	import '../node_modules/prismjs/themes/prism.css';
+	import '../../node_modules/prismjs/themes/prism.css';
 </script>
 
 <Modal

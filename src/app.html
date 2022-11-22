@@ -2,23 +2,22 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="./assets/logo.svg" />
 		<meta name="google-site-verification" content="EN9ejvJZI3Jp_WOVgiIBDT77hBxeMx3wjohjEJzWTcw" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
 		<meta name="theme-color" content="#ffffff" />
 
 		<meta name="title" content="jsnow" />
 		<meta
 			name="description"
-			content="An instant JavaScript evaulatur and playground. Run TypeScript, use modern TSC proposals, create snippets, and more straight from your browser. Try it out!"
+			content="An instant JavaScript evaulatur and playground. Run TypeScript, use modern TSC proposals, create snippets, and more straight from your browser."
 		/>
 
 		<title>jsnow | evaulate js instantly</title>
+		%sveltekit.head%
 	</head>
 	<body>
-		<div id="app"></div>
-		<script type="module" src="./src/main.ts"></script>
+		<div id="app">%sveltekit.body%</div>
 	</body>
 </html>
