@@ -1,4 +1,4 @@
-# jsnow <img src="./assets/logo.svg" height="60" align="right" alt="JSNow Logo">
+# jsnow <img src="./static/favicon.svg" height="60" align="right" alt="JSNow Logo">
 
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 ![GitHub](https://img.shields.io/github/license/LeoDog896/jsnow)

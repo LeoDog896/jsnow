@@ -8,10 +8,10 @@ export const code = writable(`// Welcome to JSNow!
 
 5 + 5 // expressions are outputted to the right
 
-Array(5).fill(4).map(it => it * 2) // including these expressions!
+Array.from({ length: 5 }, (_, i) => i * 2) // including these expressions!
 
-function reverse(param) {
-	return param.split("").reverse().join("")
+function reverse(str) {
+	return str.split("").reverse().join("")
 }
 
 reverse("Hello World!")

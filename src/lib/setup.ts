@@ -5,7 +5,7 @@ import {
 	highlightActiveLine,
 	dropCursor
 } from '@codemirror/view';
-import { Extension, EditorState } from '@codemirror/state';
+import { type Extension, EditorState } from '@codemirror/state';
 import { history, historyKeymap } from '@codemirror/history';
 import { foldGutter, foldKeymap } from '@codemirror/fold';
 import { indentOnInput } from '@codemirror/language';
@@ -59,7 +59,7 @@ function completeFromGlobalScope(context: CompletionContext) {
 		if (object?.name == 'VariableName') {
 			let from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
 			let variableName = context.state.sliceDoc(object.from, object.to);
-			if (typeof window[variableName] == 'object')
+			if (typeof window[variableName] === 'object')
 				return completeProperties(from, window[variableName]);
 		}
 	} else if (nodeBefore.name == 'VariableName') {
