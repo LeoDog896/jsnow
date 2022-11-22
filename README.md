@@ -20,11 +20,11 @@ Feel free to submit a pull request or issue! Feedback is greately appreciated!
 
 ### Development
 
-Run `npm run dev` to start automatically building the site.
+Run `yarn dev` to start automatically building the site.
 
 ### Building
 
-Run `npm run build` to build the site. It will output to `dist/`.
+Run `yarn build` to build the site. It will output to `build/`.
 
 ## License
 
