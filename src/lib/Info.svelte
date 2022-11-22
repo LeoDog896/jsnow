@@ -6,7 +6,7 @@
 		if (!text) return '';
 
 		try {
-			return Prism.highlight(text, Prism.languages['javascript'], "javascript");
+			return Prism.highlight(text, Prism.languages['javascript'], 'javascript');
 		} catch {
 			return '';
 		}
@@ -19,7 +19,7 @@
 	>
 </h1>
 
-<p>Any unused expressions or variable assignments will be printed to the side.</p>
+<p>Any expressions or variable assignments will be printed to the side.</p>
 
 <code>{@html highlight('5 + 5 // outputs 10 to the side')}</code>
 <br />
