@@ -22,7 +22,6 @@ Feel free to submit a pull request or issue! Feedback is greately appreciated!
 
 Run `npm run dev` to start automatically building the site.
 
-
 ### Building
 
 Run `npm run build` to build the site. It will output to `dist/`.

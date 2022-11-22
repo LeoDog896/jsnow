@@ -1,3 +1,3 @@
-import { writable } from "svelte/store"
+import { writable } from 'svelte/store';
 
-export const lineByLine = writable(true)
+export const lineByLine = writable(true);
