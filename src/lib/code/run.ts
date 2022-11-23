@@ -47,6 +47,10 @@ export async function run(string: string): Promise<Result[] | Error> {
 
 		return results;
 	} catch (e) {
-		return e;
+		if (e instanceof Error) {
+			return e;
+		} else {
+			throw Error("[jsnow] not an error?")
+		}
 	}
 }

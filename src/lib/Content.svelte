@@ -58,7 +58,7 @@
 <div
 	style="grid-template-columns: {$cappedDragDistance}px {window.innerWidth -
 		$cappedDragDistance}px;"
-	class="gap-0 grid grid-rows-1 grid-cols-2"
+	class="gap-0 grid grid-rows-1 grid-cols-2 w-screen h-screen"
 >
 	<div class="flex">
 		<div
@@ -83,11 +83,9 @@
 		/>
 	</div>
 	{#await $runCode then results}
-		<p class="px-1 w-full text-[1rem] leading-[1.4058rem]">
+		<p class="px-1 w-full text-[1rem] leading-[1.4058rem] overflow-scroll h-full">
 			{#if results instanceof Error}
-				{#each results.toString().split('\n') as resultLine}
-					<p class="text-red-700">{resultLine}</p>
-				{/each}
+				<pre class="text-red-700">{results.stack}</pre>
 			{:else if $lineByLine}
 				{#each results.sort((a, b) => a.lineNumber - b.lineNumber) as result}
 					<p
