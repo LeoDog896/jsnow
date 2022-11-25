@@ -8,7 +8,7 @@ const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
 
 interface Result {
 	lineNumber: number;
-	content?: ColoredElement;
+	content: ColoredElement;
 }
 
 registerPlugins({
@@ -50,7 +50,7 @@ export async function run(string: string): Promise<Result[] | Error> {
 		if (e instanceof Error) {
 			return e;
 		} else {
-			throw Error("[jsnow] not an error?")
+			throw Error('[jsnow] not an error?');
 		}
 	}
 }

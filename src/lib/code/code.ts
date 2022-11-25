@@ -24,7 +24,11 @@ export const babelledCode = derived(code, (newCode) => {
 	try {
 		return transformCode(newCode);
 	} catch (e) {
-		return e;
+		if (e instanceof Error) {
+			return e;
+		} else {
+			throw Error(`${e} is not an instance of Error?`);
+		}
 	}
 });
 

@@ -1,40 +1,15 @@
 <script lang="ts">
-	import { EditorState, EditorView, basicSetup } from './setup';
-	import { onMount } from 'svelte';
-	import { ViewPlugin } from '@codemirror/view';
 	import { flattenColoredElement } from './elementParser';
-	import { code, runCode } from './code/code';
+	import { runCode } from './code/code';
 	import Settings from './settings/Settings.svelte';
 	import Info from './Info.svelte';
 	import { getContext } from 'svelte';
 	import { isBeingDragged, dragDistance, cappedDragDistance } from './dragbar';
 	import { lineByLine } from './settings/settings';
 	const { open } = getContext('simple-modal');
+	import Editor from './Editor.svelte';
 	import SettingsIcon from '@indaco/svelte-iconoir/icons/SettingsIcon.svelte';
 	import QuestionMarkIcon from '@indaco/svelte-iconoir/icons/QuestionMarkIcon.svelte';
-
-	const updatePlugin = ViewPlugin.fromClass(
-		class {
-			constructor() {}
-
-			update(update) {
-				if (update.docChanged) code.set(update.state.doc.toString());
-			}
-		}
-	);
-
-	let editor: HTMLDivElement;
-
-	onMount(
-		() =>
-			new EditorView({
-				state: EditorState.create({
-					doc: $code,
-					extensions: [basicSetup, updatePlugin]
-				}),
-				parent: editor
-			})
-	);
 </script>
 
 <svelte:body
@@ -63,12 +38,13 @@
 	<div class="flex">
 		<div
 			class="grow outline-none"
-			bind:this={editor}
 			data-gramm="false"
 			data-gramm_editor="false"
 			data-enable-grammarly="false"
 			spellcheck="false"
-		/>
+		>
+			<Editor />
+		</div>
 		<div
 			class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2"
 			style="left: {$cappedDragDistance}px;"
@@ -91,8 +67,10 @@
 					<p
 						class="absolute"
 						style="
-							top: {document.querySelector('.cm-content').children[result.lineNumber - 1].getBoundingClientRect()
-							.y}px;
+							top: {document
+							.querySelector('.cm-content')
+							?.children[result.lineNumber - 1]?.getBoundingClientRect()?.y ??
+							12 * result.lineNumber}px;
 							"
 					>
 						{#each flattenColoredElement(result.content) as line}
