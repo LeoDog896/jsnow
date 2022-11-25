@@ -313,10 +313,10 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.15.15.tgz#32c65517a09320b62530867345222fde7794fbe1"
   integrity sha512-lhz6UNPMDXUhtXSulw8XlFAtSYO26WmHQnCi2Lg2p+/TMiJKNLtZCYUxV4wG6rZMzXmr8InGpNwk+DLT2Hm0PA==
 
-"@indaco/svelte-iconoir@^2.3.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@indaco/svelte-iconoir/-/svelte-iconoir-2.6.2.tgz#7955f882ce0a33b863d064b0042c74e86ae55896"
-  integrity sha512-rFM1ad4K/hIp5EivVnrLLgmMOpehMZIRGTTiR9YPnhy/5h5DsQqmuCD0rT0lDkBmrgXGdryMdLvQo9MEIhwbUQ==
+"@indaco/svelte-iconoir@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@indaco/svelte-iconoir/-/svelte-iconoir-3.1.0.tgz#4a38af11861db4b3d02e879be3547027207f3a76"
+  integrity sha512-1R19GRJ6HfWI1xrOvVbxzj1Df+T5VoZEso0qNGGGkLBVb2qcoRkhMXDNZrIQNnbN2vkx+8eyJQkeoeuil/bqsQ==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -1252,11 +1252,6 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
-
-codemirror@^5.65.2:
-  version "5.65.10"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.10.tgz#4276a93b8534ce91f14b733ba9a1ac949666eac9"
-  integrity sha512-IXAG5wlhbgcTJ6rZZcmi4+sjWIbJqIGfeg3tNa3yX84Jb3T4huS5qzQAo/cUisc1l3bI47WZodpyf7cYcocDKg==
 
 collect-v8-coverage@^1.0.0:
   version "1.0.1"

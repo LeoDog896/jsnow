@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Prism from 'prismjs';
-	import GithubIcon from '@indaco/svelte-iconoir/icons/GitHubIcon.svelte';
+	import { GitHubIcon } from '@indaco/svelte-iconoir/icons/GitHubIcon';
 
 	function highlight(text: string): string {
 		if (!text) return '';
@@ -15,7 +15,7 @@
 
 <h1 class="text-3xl">
 	Welcome to JSNow!<a href="https://github.com/LeoDog896/jsnow"
-		><GithubIcon class="pl-4 inline" /></a
+		><GitHubIcon class="pl-4 inline" /></a
 	>
 </h1>
 
