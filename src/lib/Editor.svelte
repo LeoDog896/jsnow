@@ -13,8 +13,15 @@
 	onMount(async () => {
 		// @ts-ignore
 		self.MonacoEnvironment = {
-			getWorker() {
-				return new Worker(new URL(TsWorker, import.meta.url));
+			getWorker(workerId, label) {
+				// @ts-ignore
+				return new Worker(self["MonacoEnvironment"].getWorkerUrl(workerId, label), {
+					name: label,
+					type: 'module'
+				});
+			},
+			getWorkerUrl: function (moduleId, label) {
+				return TsWorker
 			}
 		};
 
