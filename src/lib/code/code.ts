@@ -10,8 +10,9 @@ export const code = writable(`// Welcome to JSNow!
 
 Array.from({ length: 5 }, (_, i) => i * 2) // including these expressions!
 
-function reverse(str) {
-	return str.split("").reverse().join("")
+// there is also additional support for modern JS and TypeScript
+function reverse(str: string) {
+	return [...str].reverse().join("")
 }
 
 reverse("Hello World!")

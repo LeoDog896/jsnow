@@ -68,9 +68,9 @@
 						class="absolute"
 						style="
 							top: {document
-							.querySelector('.cm-content')
+							.querySelector('.view-lines')
 							?.children[result.lineNumber - 1]?.getBoundingClientRect()?.y ??
-							12 * result.lineNumber}px;
+							19 * result.lineNumber}px;
 							"
 					>
 						{#each flattenColoredElement(result.content) as line}
@@ -90,15 +90,3 @@
 		</p>
 	{/await}
 </div>
-
-<style>
-	:global(.cm-scroller) {
-		overflow: scroll-y;
-		min-height: 100vh;
-		max-height: 100vh;
-	}
-
-	:global(.cm-content) {
-		font-size: 16px;
-	}
-</style>

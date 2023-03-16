@@ -7,7 +7,7 @@
 		if (!text) return '';
 
 		try {
-			return Prism.highlight($babelledCode, Prism.languages['javascript']);
+			return Prism.highlight($babelledCode, Prism.languages['javascript'], 'js');
 		} catch {
 			return '';
 		}
