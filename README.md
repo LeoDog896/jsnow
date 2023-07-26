@@ -18,7 +18,7 @@ Feel free to submit a pull request or issue! Feedback is greately appreciated!
 
 ### Development
 
-Run `yarn dev` to start automatically building the site.
+Run `yarn dev` to start the developer enviornment.
 
 ### Building
 
