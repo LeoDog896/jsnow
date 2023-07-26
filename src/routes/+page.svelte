@@ -8,8 +8,8 @@
 	import { lineByLine } from '$lib/settings/settings';
 	const { open } = getContext('simple-modal');
 	import Editor from '$lib/Editor.svelte';
-	import { SettingsIcon } from '@indaco/svelte-iconoir/icons/SettingsIcon';
-	import { QuestionMarkIcon } from '@indaco/svelte-iconoir/icons/QuestionMarkIcon';
+	import { SettingsIcon } from '@indaco/svelte-iconoir/settings';
+	import { QuestionMarkIcon } from '@indaco/svelte-iconoir/question-mark';
 </script>
 
 <svelte:body
@@ -49,7 +49,7 @@
 			class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2"
 			style="left: {$cappedDragDistance}px;"
 		/>
-		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
 			style="left: {$cappedDragDistance}px;"

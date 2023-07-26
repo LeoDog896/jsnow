@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Prism from 'prismjs';
-	import { GitHubIcon } from '@indaco/svelte-iconoir/icons/GitHubIcon';
+	import { GitHubIcon } from '@indaco/svelte-iconoir/github';
 
 	function highlight(text: string): string {
 		if (!text) return '';
