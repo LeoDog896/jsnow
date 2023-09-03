@@ -15,6 +15,7 @@ function reverse(str: string) {
 	return [...str].reverse().join("")
 }
 
+// hover over the output to copy it!
 reverse("Hello World!")
 
 // Try it out! Stay with the examples here or CTRL + A and delete.

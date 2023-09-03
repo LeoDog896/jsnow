@@ -18,11 +18,11 @@ export interface StringColoredElement {
 	color?: Colors;
 }
 
-const isPromise = (promiseToCheck) => {
+const isPromise = (promiseToCheck: unknown): promiseToCheck is Promise<unknown> => {
 	return (
 		!!promiseToCheck &&
 		(typeof promiseToCheck === 'object' || typeof promiseToCheck === 'function') &&
-		typeof promiseToCheck.then === 'function'
+		"then" in promiseToCheck && typeof promiseToCheck.then === 'function'
 	);
 };
 
@@ -46,7 +46,7 @@ export function flattenColoredElement(element: ColoredElement): StringColoredEle
 		.flat();
 }
 
-export function stringify(element: any): ColoredElement {
+export function stringify(element: unknown): ColoredElement {
 	if (Array.isArray(element)) {
 		return {
 			content: [

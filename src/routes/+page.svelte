@@ -28,14 +28,17 @@
 						className: 'result-decorator',
 						hoverMessage: {
 							value: flattenColoredElement(result.content)
-								.map((x) => x.content)
+								.map((x) => `<span class="preserve-whitespace-jsnow" style="color:${x.color};">${x.content.replaceAll(" ", "&nbsp;")}</span>`)
 								.join(''),
+							isTrusted: true,
+							supportHtml: true
 						},
 						after: {
 							inlineClassName: 'result-text-decorator',
 							content: " ".repeat(8) + flattenColoredElement(result.content)
 								.map((x) => x.content)
 								.join(''),
+							cursorStops: 3
 						},
 					}
 				}))
@@ -56,9 +59,10 @@
 			spellcheck="false"
 		>
 			<MonacoEditor
+				theme="github-dark"
 				options={{
 					automaticLayout: true,
-					language: 'typescript'
+					language: 'typescript',
 				}}
 				on:ready={(readyEditor) => {
 					editor = readyEditor.detail;
@@ -70,6 +74,10 @@
 </div>
 
 <style>
+	:global(.preserve-whitespace-jsnow) {
+		white-space: pre;
+	}
+
 	:global(.icon) {
 		transform: scale(1.25);
 		transition-property: transform;
@@ -87,7 +95,7 @@
 	}
 
 	:global(.result-text-decorator) {
-		color: rgba(0, 0, 0, 0.5) !important;
+		color: rgba(255, 255, 255, 0.5) !important;
 	}
 
 	:global(.icon:hover) {
