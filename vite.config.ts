@@ -6,7 +6,7 @@ import generateSitemap from 'vite-plugin-pages-sitemap';
 generateSitemap({ hostname: 'https://now.js.org/', routes: ['/', '/index.html'] });
 
 const config: UserConfig = {
-	plugins: [sveltekit()],
+	plugins: [sveltekit()]
 };
 
 export default config;

@@ -1,92 +1,116 @@
 <script lang="ts">
+	import { code, runCode } from '$lib/code/code';
+	import MonacoEditor from 'svelte-monaco';
+	import type Monaco from 'monaco-editor';
+	import { Range } from 'monaco-editor';
 	import { flattenColoredElement } from '$lib/elementParser';
-	import { runCode } from '$lib/code/code';
-	import Settings from '$lib/settings/Settings.svelte';
-	import Info from '$lib/Info.svelte';
-	import { getContext } from 'svelte';
-	import { isBeingDragged, dragDistance, cappedDragDistance } from '$lib/dragbar';
-	import { lineByLine } from '$lib/settings/settings';
-	const { open } = getContext('simple-modal');
-	import Editor from '$lib/Editor.svelte';
-	import { SettingsIcon } from '@indaco/svelte-iconoir/settings';
-	import { QuestionMarkIcon } from '@indaco/svelte-iconoir/question-mark';
+
+	let editor: Monaco.editor.IStandaloneCodeEditor | undefined = undefined;
+	let results: Awaited<typeof $runCode>;
+
+	$: {
+		const decorations = editor
+			?.getDecorationsInRange(new Range(1, 1, 1_000_000_000, 1))
+			?.map((decoration) => decoration.id);
+
+		if (decorations) {
+			editor?.removeDecorations(decorations);
+		}
+
+		if (results instanceof Error) {
+			console.error(results);
+		} else {
+			editor?.createDecorationsCollection(
+				results.map((result) => ({
+					range: new Range(result.lineNumber, 0, result.lineNumber, $code.split("\n")[result.lineNumber - 1].length + 1),
+					options: {
+						isWholeLine: true,
+						className: 'result-decorator',
+						hoverMessage: {
+							value: flattenColoredElement(result.content)
+								.map((x) => x.content)
+								.join(''),
+						},
+						after: {
+							inlineClassName: 'result-text-decorator',
+							content: " ".repeat(8) + flattenColoredElement(result.content)
+								.map((x) => x.content)
+								.join(''),
+						},
+					}
+				}))
+			);
+		}
+	}
+
+	$: $runCode.then((result) => (results = result));
 </script>
 
-<svelte:body
-	on:mousemove={(e) => {
-		if ($isBeingDragged) $dragDistance = e.clientX;
-	}}
-	on:mouseup={(_) => {
-		$isBeingDragged = false;
-	}}
-/>
-<SettingsIcon
-	alt="Settings"
-	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-5"
-	on:click={() => open(Settings)}
-/>
-<QuestionMarkIcon
-	alt="Info"
-	class="scale-125 hover:rotate-12 transition-transform fixed bottom-5 right-[60px]"
-	on:click={() => open(Info)}
-/>
-<div
-	style="grid-template-columns: {$cappedDragDistance}px {window.innerWidth -
-		$cappedDragDistance}px;"
-	class="gap-0 grid grid-rows-1 grid-cols-2 w-screen h-screen"
->
+<div class="container">
 	<div class="flex">
 		<div
-			class="grow outline-none"
+			class="editor"
 			data-gramm="false"
 			data-gramm_editor="false"
 			data-enable-grammarly="false"
 			spellcheck="false"
 		>
-			<Editor />
+			<MonacoEditor
+				options={{
+					automaticLayout: true,
+					language: 'typescript'
+				}}
+				on:ready={(readyEditor) => {
+					editor = readyEditor.detail;
+				}}
+				bind:value={$code}
+			/>
 		</div>
-		<div
-			class="absolute translate-x-[-50%] w-[2px] cursor-col-resize h-screen bg-grey border-2"
-			style="left: {$cappedDragDistance}px;"
-		/>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="absolute px-2 w-[2px] translate-x-[-50%] cursor-col-resize h-screen bg-transparent"
-			style="left: {$cappedDragDistance}px;"
-			on:mousedown={() => {
-				$isBeingDragged = true;
-			}}
-		/>
 	</div>
-	{#await $runCode then results}
-		<p class="px-1 w-full text-[1rem] leading-[1.4058rem] overflow-scroll h-full">
-			{#if results instanceof Error}
-				<pre class="text-red-700">{results.stack}</pre>
-			{:else if $lineByLine}
-				{#each results.sort((a, b) => a.lineNumber - b.lineNumber) as result}
-					<p
-						class="absolute"
-						style="
-							top: {document
-							.querySelector('.view-lines')
-							?.children[result.lineNumber - 1]?.getBoundingClientRect()?.y ??
-							19 * result.lineNumber}px;
-							"
-					>
-						{#each flattenColoredElement(result.content) as line}
-							<span style="color: {line.color};">{@html line.content}</span>
-						{/each}
-					</p>
-				{/each}
-			{:else}
-				{#each results as result}
-					<p>
-						{#each flattenColoredElement(result.content) as line}
-							<span style="color: {line.color};">{@html line.content}</span>
-						{/each}
-					</p>
-				{/each}
-			{/if}
-		</p>
-	{/await}
 </div>
+
+<style>
+	:global(.icon) {
+		transform: scale(1.25);
+		transition-property: transform;
+		position: fixed;
+		bottom: 1.25rem;
+		right: 1.25rem;
+	}
+
+	:global(.icon-2) {
+		right: 60px;
+	}
+
+	:global(.result-decorator) {
+		background-color: rgba(0, 255, 0, 0.1);
+	}
+
+	:global(.result-text-decorator) {
+		color: rgba(0, 0, 0, 0.5) !important;
+	}
+
+	:global(.icon:hover) {
+		transform: scale(1.25) rotate(12deg);
+	}
+
+	.container {
+		display: grid;
+		grid-template-rows: 1fr;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0;
+		width: 100vw;
+		height: 100vh;
+	}
+
+	.flex {
+		display: flex;
+	}
+
+	.editor {
+		outline: none;
+		resize: none;
+		width: 100%;
+		height: 100%;
+	}
+</style>
