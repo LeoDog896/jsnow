@@ -22,7 +22,8 @@ const isPromise = (promiseToCheck: unknown): promiseToCheck is Promise<unknown> 
 	return (
 		!!promiseToCheck &&
 		(typeof promiseToCheck === 'object' || typeof promiseToCheck === 'function') &&
-		"then" in promiseToCheck && typeof promiseToCheck.then === 'function'
+		'then' in promiseToCheck &&
+		typeof promiseToCheck.then === 'function'
 	);
 };
 

@@ -20,28 +20,43 @@
 		if (results instanceof Error) {
 			console.error(results);
 		} else {
+			let lines = $code.split('\n');
 			editor?.createDecorationsCollection(
-				results.map((result) => ({
-					range: new Range(result.lineNumber, 0, result.lineNumber, $code.split("\n")[result.lineNumber - 1].length + 1),
-					options: {
-						isWholeLine: true,
-						className: 'result-decorator',
-						hoverMessage: {
-							value: flattenColoredElement(result.content)
-								.map((x) => `<span class="preserve-whitespace-jsnow" style="color:${x.color};">${x.content.replaceAll(" ", "&nbsp;")}</span>`)
-								.join(''),
-							isTrusted: true,
-							supportHtml: true
-						},
-						after: {
-							inlineClassName: 'result-text-decorator',
-							content: " ".repeat(8) + flattenColoredElement(result.content)
-								.map((x) => x.content)
-								.join(''),
-							cursorStops: 3
-						},
-					}
-				}))
+				results
+					.filter((result) => lines.length >= result.lineNumber)
+					.map((result) => ({
+						range: new Range(
+							result.lineNumber,
+							0,
+							result.lineNumber,
+							lines[result.lineNumber - 1].length + 1
+						),
+						options: {
+							isWholeLine: true,
+							className: 'result-decorator',
+							hoverMessage: {
+								value: flattenColoredElement(result.content)
+									.map(
+										(x) =>
+											`<span class="preserve-whitespace-jsnow" style="color:${
+												x.color
+											};">${x.content.replaceAll(' ', '&nbsp;')}</span>`
+									)
+									.join(''),
+								isTrusted: true,
+								supportHtml: true
+							},
+							after: {
+								inlineClassName: 'result-text-decorator',
+								content:
+									' '.repeat(8) +
+									flattenColoredElement(result.content)
+										.map((x) => x.content)
+										.join(''),
+								cursorStops: 3
+							}
+						}
+					}))
 			);
 		}
 	}
@@ -62,7 +77,7 @@
 				theme="github-dark"
 				options={{
 					automaticLayout: true,
-					language: 'typescript',
+					language: 'typescript'
 				}}
 				on:ready={(readyEditor) => {
 					editor = readyEditor.detail;

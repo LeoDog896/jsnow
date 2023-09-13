@@ -1,22 +1,25 @@
 import { lineByLine } from '../settings/settings';
 import { get } from 'svelte/store';
-import type { TraverseOptions, Node } from '@babel/traverse';
+import type { TraverseOptions, Node, NodePath } from '@babel/traverse';
+import type { CallExpression } from '@babel/types';
+import type * as t from '@babel/types';
+import type { BaseNode } from 'svelte/types/compiler/interfaces';
 
-export default function ({ types: t }): { visitor: TraverseOptions<Node> } {
-	function visit(path) {
+export default function ({ types }: { types: typeof t }): { visitor: TraverseOptions<Node> } {
+	function visit(path: NodePath<CallExpression>) {
 		if (path.parentPath.node.type !== 'VariableDeclarator') return;
-		if (path.parentPath.parentPath.parentPath.node.type !== 'Program') return;
+		if (path.parentPath?.parentPath?.parentPath?.node.type !== 'Program') return;
 		const variableName = path.parentPath.node.id.name;
 
 		path.parentPath.parentPath.insertAfter(
-			t.callExpression(t.identifier('debug'), [
-				t.identifier(path.node.loc.start.line.toString()),
-				t.identifier(variableName)
+			types.callExpression(types.identifier('debug'), [
+				types.identifier(path.node.loc.start.line.toString()),
+				types.identifier(variableName)
 			])
 		);
 	}
 
-	function expression(path, replace?) {
+	function expression(path: NodePath<BaseNode>, replace?: BaseNode) {
 		if (replace == null) replace = path.node;
 
 		if (path.parentPath.node.type != 'ExpressionStatement') return;
@@ -29,7 +32,10 @@ export default function ({ types: t }): { visitor: TraverseOptions<Node> } {
 		if (path.node.loc?.start == null) return;
 
 		path.replaceWith(
-			t.callExpression(t.identifier('debug'), [t.numericLiteral(path.node.loc.start.line), replace])
+			types.callExpression(types.identifier('debug'), [
+				types.numericLiteral(path.node.loc.start.line),
+				replace
+			])
 		);
 	}
 
@@ -60,18 +66,18 @@ export default function ({ types: t }): { visitor: TraverseOptions<Node> } {
 				if (!path.node?.value) return;
 				if (!path.node.loc?.start?.line) return;
 				path.parentPath.replaceWith(
-					t.callExpression(t.identifier('debug'), [
-						t.numericLiteral(path.node.loc.start.line),
-						t.stringLiteral(path.node.value)
+					types.callExpression(types.identifier('debug'), [
+						types.numericLiteral(path.node.loc.start.line),
+						types.stringLiteral(path.node.value)
 					])
 				);
 			},
 			AssignmentExpression(path) {
 				if (path.node.loc?.start == null) return;
 				path.insertAfter(
-					t.callExpression(t.identifier('debug'), [
-						t.numericLiteral(path.node.loc.start.line),
-						t.identifier(path.node.left['name'])
+					types.callExpression(types.identifier('debug'), [
+						types.numericLiteral(path.node.loc.start.line),
+						types.identifier(path.node.left['name'])
 					])
 				);
 			},
@@ -96,9 +102,9 @@ export default function ({ types: t }): { visitor: TraverseOptions<Node> } {
 				if (path.node.loc?.start == null) return;
 
 				path.parentPath.insertAfter(
-					t.callExpression(t.identifier('debug'), [
-						t.numericLiteral(path.node.loc.start.line),
-						t.identifier(path.toString())
+					types.callExpression(types.identifier('debug'), [
+						types.numericLiteral(path.node.loc.start.line),
+						types.identifier(path.toString())
 					])
 				);
 

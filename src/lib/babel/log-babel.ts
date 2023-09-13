@@ -2,23 +2,24 @@
 // Based off of https://babeljs.io/docs/en/babel-plugin-transform-remove-console/#usage
 
 import type { TraverseOptions, Node } from '@babel/traverse';
+import type * as t from '@babel/types';
 
-export default function ({ types: t }): { visitor: TraverseOptions<Node> } {
+export default function ({ types }: { types: typeof t }): { visitor: TraverseOptions<Node> } {
 	return {
 		visitor: {
 			MemberExpression(path) {
 				if (!path.node.object) return;
 				if (!path.node.property) return;
 
-				if (path.node.object['name'] != 'console') return;
+				if (path.node.object.name != 'console') return;
 
-				if (path.node.property['name'] != 'log') return;
+				if (path.node.property.name != 'log') return;
 
-				path.parentPath.node['arguments'] = [
-					t.identifier(path.node.loc.start.line.toString()),
-					...path.parentPath.node['arguments']
+				path.parentPath.node.arguments = [
+					types.identifier(path.node.loc.start.line.toString()),
+					...path.parentPath.node.arguments
 				];
-				path.replaceWith(t.identifier('debug'));
+				path.replaceWith(types.identifier('debug'));
 			}
 		}
 	};
