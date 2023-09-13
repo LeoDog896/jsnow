@@ -1,13 +1,11 @@
 import { lineByLine } from '../settings/settings';
 import { get } from 'svelte/store';
 import type { TraverseOptions, Node, NodePath } from '@babel/traverse';
-import type { CallExpression } from '@babel/types';
 import type * as t from '@babel/types';
-import type { BaseNode } from 'svelte/types/compiler/interfaces';
 
 export default function ({ types }: { types: typeof t }): { visitor: TraverseOptions<Node> } {
-	function visit(path: NodePath<CallExpression>) {
-		if (path.parentPath.node.type !== 'VariableDeclarator') return;
+	function visit(path: NodePath<Node>) {
+		if (path.parentPath?.node.type !== 'VariableDeclarator') return;
 		if (path.parentPath?.parentPath?.parentPath?.node.type !== 'Program') return;
 		const variableName = path.parentPath.node.id.name;
 
@@ -19,10 +17,10 @@ export default function ({ types }: { types: typeof t }): { visitor: TraverseOpt
 		);
 	}
 
-	function expression(path: NodePath<BaseNode>, replace?: BaseNode) {
+	function expression(path: NodePath<Node>, replace?: t.Node) {
 		if (replace == null) replace = path.node;
 
-		if (path.parentPath.node.type != 'ExpressionStatement') return;
+		if (path.parentPath?.node.type != 'ExpressionStatement') return;
 		if (path.node.callee?.identifier == 'debug') return;
 
 		if (get(lineByLine)) {
@@ -50,7 +48,7 @@ export default function ({ types }: { types: typeof t }): { visitor: TraverseOpt
 				visit(path);
 			},
 			CallExpression(path) {
-				if (path.node.callee['object'] && path.node.callee['object'].name == 'console') return;
+				if (path.node.callee.object && path.node.callee.object.name == 'console') return;
 				expression(path);
 				visit(path);
 			},
@@ -77,7 +75,7 @@ export default function ({ types }: { types: typeof t }): { visitor: TraverseOpt
 				path.insertAfter(
 					types.callExpression(types.identifier('debug'), [
 						types.numericLiteral(path.node.loc.start.line),
-						types.identifier(path.node.left['name'])
+						types.identifier(path.node.left.name)
 					])
 				);
 			},
@@ -115,6 +113,7 @@ export default function ({ types }: { types: typeof t }): { visitor: TraverseOpt
 				visit(path);
 			},
 			Literal(path) {
+				if (path.parentPath.node.type == 'VariableDeclarator') return;
 				if (path.type == 'TemplateLiteral') return;
 				expression(path);
 				visit(path);

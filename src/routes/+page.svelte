@@ -1,27 +1,40 @@
 <script lang="ts">
-	import { code, runCode } from '$lib/code/code';
+	import { code, runCode, babelledCode } from '$lib/code/code';
 	import MonacoEditor from 'svelte-monaco';
 	import type Monaco from 'monaco-editor';
 	import { Range } from 'monaco-editor';
 	import { flattenColoredElement } from '$lib/elementParser';
+	import Terminal from '$lib/terminal/Terminal.svelte';
 
-	let editor: Monaco.editor.IStandaloneCodeEditor | undefined = undefined;
+	let mainEditor: Monaco.editor.IStandaloneCodeEditor | undefined = undefined;
 	let results: Awaited<typeof $runCode>;
+	let terminal: Terminal | undefined;
+
+	let output: string;
+	$: if ($babelledCode instanceof Error) {
+		output = $babelledCode.message;
+	} else {
+		output = $babelledCode;
+	}
+
+	let tab: 'terminal' | 'generated' = 'terminal';
 
 	$: {
-		const decorations = editor
+		const decorations = mainEditor
 			?.getDecorationsInRange(new Range(1, 1, 1_000_000_000, 1))
 			?.map((decoration) => decoration.id);
 
 		if (decorations) {
-			editor?.removeDecorations(decorations);
+			mainEditor?.removeDecorations(decorations);
 		}
 
 		if (results instanceof Error) {
-			console.error(results);
+			let result = results;
+			terminal?.clear().then(() => terminal?.write(result.message));
 		} else {
+			terminal?.clear();
 			let lines = $code.split('\n');
-			editor?.createDecorationsCollection(
+			mainEditor?.createDecorationsCollection(
 				results
 					.filter((result) => lines.length >= result.lineNumber)
 					.map((result) => ({
@@ -65,30 +78,78 @@
 </script>
 
 <div class="container">
-	<div class="flex">
-		<div
-			class="editor"
-			data-gramm="false"
-			data-gramm_editor="false"
-			data-enable-grammarly="false"
-			spellcheck="false"
-		>
-			<MonacoEditor
-				theme="github-dark"
-				options={{
-					automaticLayout: true,
-					language: 'typescript'
-				}}
-				on:ready={(readyEditor) => {
-					editor = readyEditor.detail;
-				}}
-				bind:value={$code}
-			/>
+	<div
+		class="editor"
+		data-gramm="false"
+		data-gramm_editor="false"
+		data-enable-grammarly="false"
+		spellcheck="false"
+	>
+		<MonacoEditor
+			theme="github-dark"
+			options={{
+				automaticLayout: true,
+				language: 'typescript'
+			}}
+			on:ready={(readyEditor) => {
+				mainEditor = readyEditor.detail;
+			}}
+			bind:value={$code}
+		/>
+	</div>
+	<div class="output">
+		{#if tab == 'terminal'}
+			<div class="terminal">
+				<Terminal bind:this={terminal} />
+			</div>
+		{:else if tab == 'generated'}
+			<div
+				class="editor"
+				data-gramm="false"
+				data-gramm_editor="false"
+				data-enable-grammarly="false"
+				spellcheck="false"
+			>
+				<MonacoEditor
+					theme="github-dark"
+					options={{
+						automaticLayout: true,
+						language: 'typescript',
+						readOnly: true
+					}}
+					bind:value={output}
+				/>
+			</div>
+		{/if}
+		<div class="options">
+			<button on:click={() => (tab = 'terminal')}>Terminal</button>
+			<button on:click={() => (tab = 'generated')}>Generated Code</button>
 		</div>
 	</div>
 </div>
 
 <style>
+	div.terminal {
+		height: calc(100% - 2rem);
+		width: 100%;
+		padding: 1rem;
+		background: black;
+	}
+
+	div.options {
+		padding: 1rem;
+		background-color: #1e1e1e;
+		width: 100%;
+	}
+
+	div.output {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+	}
+
 	:global(.preserve-whitespace-jsnow) {
 		white-space: pre;
 	}
@@ -125,11 +186,6 @@
 		width: 100vw;
 		height: 100vh;
 	}
-
-	.flex {
-		display: flex;
-	}
-
 	.editor {
 		outline: none;
 		resize: none;
